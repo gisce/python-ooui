@@ -79,3 +79,22 @@ def parse_xy_axis(nodes):
         raise ValueError("No y axis found. At least one y axis is required")
 
     return {"x": x_axis, "y": y_axes}
+
+
+def get_y_axis_fieldname(y_axis, fields):
+    """
+    Retrieve the field name for a Y-axis based on the `GraphYAxis` object
+    and field definitions.
+
+    :param GraphYAxis y_axis: An object representing the Y-axis.
+    :param dict fields: A dictionary containing the field definitions.
+
+    :rtype: str
+    :returns: The name of the Y-axis field.
+    """
+    field_props = fields.get(y_axis.name, {})
+
+    if 'string' in field_props and field_props['string']:
+        return field_props['string']
+
+    return y_axis.name
