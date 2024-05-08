@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from ooui.graph.processor import get_value_for_operator
+from ooui.graph.fields import get_value_for_operator
 
 
 def process_timerange_data(values, timerange, interval=1):

@@ -1,4 +1,4 @@
-from ooui.graph.chart import GraphChart
+from functools import reduce
 
 
 def get_fields_to_retrieve(ooui):
@@ -65,3 +65,52 @@ def get_value_and_label_for_field(fields, values, field_name):
         return {'value': value, 'label': value_pair[1]}
 
     return {'value': value, 'label': value}
+
+
+def get_value_for_operator(operator, values):
+    """
+    Retrieve the result of applying an operator on a list of values.
+
+    :param str operator: The operator to be applied.
+        Possible values include "count", "+", "-", "*", "avg", "min", "max".
+    :param list values: A list of numerical values on which to apply the
+        operator.
+
+    :rtype: float or int
+    :returns: The result of applying the operator to the values.
+
+    :raises ValueError: If an unsupported operator is provided or if the
+        values list is empty for certain operators.
+    """
+    if operator == "count":
+        return len(values)
+    elif operator == "+":
+        return round_number(sum(values))
+    elif operator == "-":
+        return round_number(reduce(lambda x, y: x - y, values))
+    elif operator == "*":
+        return round_number(reduce(lambda x, y: x * y, values))
+    elif operator == "avg":
+        if not values:
+            return 0
+        total_sum = sum(values)
+        avg = total_sum / len(values)
+        return round_number(avg)
+    elif operator == "min":
+        return min(values)
+    elif operator == "max":
+        return max(values)
+    else:
+        raise ValueError("Unsupported operator: {}".format(operator))
+
+
+def round_number(num):
+    """
+    Round a number to two decimal places.
+
+    :param float or int num: The number to be rounded.
+
+    :rtype: float
+    :returns: The number rounded to two decimal places.
+    """
+    return round(num * 100) / 100
