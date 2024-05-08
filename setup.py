@@ -12,6 +12,7 @@ setup(
     provides=['ooui'],
     install_requires=[
         'lxml',
+        'python-dateutil',
         'six',
     ],
     tests_require=[
