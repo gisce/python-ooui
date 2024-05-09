@@ -78,7 +78,7 @@ def process_graph_data(ooui, values, fields, options=None):
     is_stack = any(y.stacked is not None for y in ooui.y)
 
     # Sort the data by the x-axis
-    sorted_data = sorted(data, key=lambda x: x['x'])
+    sorted_data = sorted(data, key=lambda x: x['x'] or "")
 
     adjusted_stacked_data = sorted_data[:]
     if is_stack and len([y for y in ooui.y if y.stacked is not None]) > 1:
