@@ -1,11 +1,10 @@
 from __future__ import absolute_import, unicode_literals
-from functools import reduce
-from ooui.graph.fields import get_value_and_label_for_field
+from ooui.graph.fields import get_value_and_label_for_field, get_value_for_operator
 from ooui.graph.axis import get_y_axis_fieldname
 from ooui.graph.timerange import process_timerange_data
 
 
-def process_graph_data(ooui, values, fields, options):
+def process_graph_data(ooui, values, fields, options=None):
     """
     Process graph data by grouping and sorting the values according to the
     specified X and Y axes.
@@ -20,6 +19,9 @@ def process_graph_data(ooui, values, fields, options):
     :returns: A dictionary containing the final processed data and flags like
         isGroup and isStack.
     """
+    if options is None:
+        options = {}
+
     values_grouped_by_x = get_values_grouped_by_field(
         ooui.x.name, fields, values
     )

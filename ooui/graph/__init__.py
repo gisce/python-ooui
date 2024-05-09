@@ -7,6 +7,8 @@ from ooui.graph.chart import GraphChart
 GRAPH_TYPES = {
     'indicator': GraphIndicator,
     'line': GraphChart,
+    'pie': GraphChart,
+    'bar': GraphChart,
 }
 
 
@@ -15,6 +17,7 @@ def parse_graph(xml):
     Parse a graph from an XML string.
     :param xml:
     :return:
+    :rtype ooui.graph.Graph
     """
     tree = etree.fromstring(xml)
     graph = tree.xpath('//graph')[0]
