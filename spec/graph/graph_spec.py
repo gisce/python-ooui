@@ -13,8 +13,8 @@ with description('A Graph'):
         assert isinstance(graph, GraphIndicator)
         expect(graph.string).to(equal('My indicator'))
         expect(graph.type).to(equal('indicator'))
-        expect(graph.icon).to(equal('slack'))
-        expect(graph.color).to(equal('red:debt>0;green:debt==0'))
+        expect(str(graph.icon)).to(equal('slack'))
+        expect(str(graph.color)).to(equal('red:debt>0;green:debt==0'))
 
     with it('should suport indicatorField graphs'):
         xml = """<?xml version="1.0"?>
@@ -26,8 +26,8 @@ with description('A Graph'):
         assert isinstance(graph, GraphIndicatorField)
         expect(graph.string).to(equal('My indicator'))
         expect(graph.type).to(equal('indicatorField'))
-        expect(graph.icon).to(equal('slack'))
-        expect(graph.color).to(equal('red:debt>0;green:debt==0'))
+        expect(str(graph.icon)).to(equal('slack'))
+        expect(str(graph.color)).to(equal('red:debt>0;green:debt==0'))
         expect(graph.fields).to(contain_only('potencia'))
 
     with it("should parse a chart graph XML with type line"):

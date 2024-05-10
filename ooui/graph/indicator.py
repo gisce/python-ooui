@@ -1,5 +1,6 @@
 from ooui.graph.base import Graph
 from ooui.helpers import parse_bool_attribute, replace_entities
+from ooui.helpers.conditions import ConditionParser
 from ooui.graph.fields import get_value_for_operator
 
 
@@ -9,9 +10,9 @@ class GraphIndicator(Graph):
         super(GraphIndicator, self).__init__(element)
 
         self._type = graph_type
-        self._color = replace_entities(element.get('color')) if element.get(
+        self._color = ConditionParser(replace_entities(element.get('color'))) if element.get(
             'color') else None
-        self._icon = replace_entities(element.get('icon')) if element.get(
+        self._icon = ConditionParser(replace_entities(element.get('icon'))) if element.get(
             'icon') else None
         self._suffix = element.get('suffix') if element.get('suffix') else None
         self._total_domain = replace_entities(

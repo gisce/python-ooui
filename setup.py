@@ -14,6 +14,7 @@ setup(
         'lxml',
         'python-dateutil',
         'six',
+        'simpleeval<0.9.12',
     ],
     tests_require=[
         'mamba',
