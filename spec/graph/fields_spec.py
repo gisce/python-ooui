@@ -19,6 +19,23 @@ with description('Graph fields utils'):
             fields = get_fields_to_retrieve(g)
             expect(fields).to(equal(['data_alta', 'consum']))
 
+        with it('should get all the fields from the graph object'):
+            xml = """<?xml version="1.0"?>
+            <graph type="line">
+              <field name="data_alta" axis="x"/>
+              <field name="consum" operator="+" axis="y"/>
+            </graph>
+            """
+            g = parse_graph(xml)
+            expect(g.fields).to(equal(['data_alta', 'consum']))
+
+        with it('indicator fields should not have fields to read'):
+            xml = """<?xml version="1.0"?>
+            <graph string="My indicator" type="indicator" color="red:debt>0;green:debt==0" icon="slack" />
+            """
+            graph = parse_graph(xml)
+            expect(graph.fields).to(be_empty)
+
     with description('Testing get_value_and_label_for_field') as self:
         with context('when field type is many2one'):
             with it('should return the value and label if value is present'):

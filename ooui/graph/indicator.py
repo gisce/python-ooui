@@ -1,5 +1,6 @@
 from ooui.graph.base import Graph
 from ooui.helpers import parse_bool_attribute, replace_entities
+from ooui.graph.fields import get_value_for_operator
 
 
 class GraphIndicator(Graph):
@@ -37,3 +38,23 @@ class GraphIndicator(Graph):
     @property
     def suffix(self):
         return self._suffix
+
+
+class GraphIndicatorField(GraphIndicator):
+
+    def __init__(self, graph_type, element):
+        super(GraphIndicatorField, self).__init__(graph_type, element)
+        self._fields = [f for f in element if f.tag == 'field']
+
+    @property
+    def fields(self):
+        return [f.get('name') for f in self._fields]
+
+    def process(self, values, fields, options=None):
+        result = 0
+        for field in self._fields:
+            data = [v[field.get('name')] for v in values]
+            result += get_value_for_operator(field.get('operator'), data)
+        return {
+            'value': result,
+        }

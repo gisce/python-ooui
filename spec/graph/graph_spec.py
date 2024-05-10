@@ -1,7 +1,7 @@
 from mamba import *
 from expects import *
 from ooui.graph import parse_graph
-from ooui.graph.indicator import GraphIndicator
+from ooui.graph.indicator import GraphIndicator, GraphIndicatorField
 
 
 with description('A Graph'):
@@ -15,6 +15,20 @@ with description('A Graph'):
         expect(graph.type).to(equal('indicator'))
         expect(graph.icon).to(equal('slack'))
         expect(graph.color).to(equal('red:debt>0;green:debt==0'))
+
+    with it('should suport indicatorField graphs'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" type="indicatorField" color="red:debt>0;green:debt==0" icon="slack">
+            <field name="potencia" operator="+" />
+        </graph>
+        """
+        graph = parse_graph(xml)
+        assert isinstance(graph, GraphIndicatorField)
+        expect(graph.string).to(equal('My indicator'))
+        expect(graph.type).to(equal('indicatorField'))
+        expect(graph.icon).to(equal('slack'))
+        expect(graph.color).to(equal('red:debt>0;green:debt==0'))
+        expect(graph.fields).to(contain_only('potencia'))
 
     with it("should parse a chart graph XML with type line"):
         xml = """<?xml version="1.0"?>

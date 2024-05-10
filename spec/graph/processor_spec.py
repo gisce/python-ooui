@@ -34,6 +34,16 @@ def get_graph_data(xml, model):
 
 
 with description('When process a graph'):
+
+    with it('should process indicatorField graph'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" type="indicatorField" color="red:debt>0;green:debt==0" icon="slack">
+            <field name="potencia" operator="+" />
+        </graph>
+        """
+        result = get_graph_data(xml, 'polissa')
+        expect(result).to(equal({'value': 275.72}))
+
     with it('should do basic test with one y axis'):
         xml = """<?xml version="1.0"?>
         <graph type="pie">

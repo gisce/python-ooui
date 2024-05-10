@@ -1,11 +1,12 @@
 from __future__ import absolute_import, unicode_literals
 from lxml import etree
-from ooui.graph.indicator import GraphIndicator
+from ooui.graph.indicator import GraphIndicator, GraphIndicatorField
 from ooui.graph.chart import GraphChart
 
 
 GRAPH_TYPES = {
     'indicator': GraphIndicator,
+    'indicatorField': GraphIndicatorField,
     'line': GraphChart,
     'pie': GraphChart,
     'bar': GraphChart,

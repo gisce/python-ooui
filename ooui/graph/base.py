@@ -29,3 +29,10 @@ class Graph(object):
     @property
     def type(self):
         return self._type
+
+    @property
+    def fields(self):
+        return []
+
+    def process(self, values, fields, options=None):
+        raise NotImplementedError

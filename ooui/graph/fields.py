@@ -9,20 +9,7 @@ def get_fields_to_retrieve(ooui):
     :return: list of fields to retrieve
     :rtype: list[str]
     """
-    x_field = ooui.x.name
-    fields = [x_field]
-
-    if not ooui.y:
-        return []
-
-    for y in ooui.y:
-        if y.operator != 'count' and y.name not in fields:
-            fields.append(y.name)
-
-        if y.label and y.label not in fields:
-            fields.append(y.label)
-
-    return fields
+    return ooui.fields
 
 
 def get_value_and_label_for_field(fields, values, field_name):
