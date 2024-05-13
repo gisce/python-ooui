@@ -19,6 +19,9 @@ class GraphIndicator(Graph):
         self._suffix = element.get('suffix') if element.get('suffix') else None
         self._total_domain = Domain(replace_entities(
             element.get('totalDomain')) if element.get('totalDomain') else None)
+        self._total_domain = element.get('totalDomain') and Domain(
+            replace_entities(element.get('totalDomain'))
+        ) or None
         self._show_percent = parse_bool_attribute(
             element.get('showPercent')) if element.get('showPercent') else False
         self.domain_parse_values = {}

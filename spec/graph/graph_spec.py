@@ -31,6 +31,7 @@ with description('A Graph'):
         expect(str(graph.icon)).to(equal('slack'))
         expect(str(graph.color)).to(equal('red:debt>0;green:debt==0'))
         expect(graph.fields).to(contain_only('potencia'))
+        expect(graph.total_domain).to(be_none)
         expect(graph.show_percent).to(be_true)
 
     with it("should parse a chart graph XML with type line"):
