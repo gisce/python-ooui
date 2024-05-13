@@ -1,3 +1,4 @@
+from __future__ import division
 from ooui.graph.base import Graph
 from ooui.helpers import parse_bool_attribute, replace_entities
 from ooui.helpers.conditions import ConditionParser
@@ -40,27 +41,7 @@ class GraphIndicator(Graph):
     def suffix(self):
         return self._suffix
 
-
-class GraphIndicatorField(GraphIndicator):
-
-    def __init__(self, graph_type, element):
-        super(GraphIndicatorField, self).__init__(graph_type, element)
-        self._fields = [f for f in element if f.tag == 'field']
-
-    @property
-    def fields(self):
-        return [f.get('name') for f in self._fields]
-
-    def process(self, values, fields, total_values=None, options=None):
-        if total_values is None:
-            total_values = []
-        value = 0
-        total = 0
-        for field in self._fields:
-            data = [v[field.get('name')] for v in values]
-            value += get_value_for_operator(field.get('operator'), data)
-            total_data = [v[field.get('name')] for v in total_values]
-            total += get_value_for_operator(field.get('operator'), total_data)
+    def process(self, value, total=0):
         res = {
             'value': value,
             'total': total,
@@ -72,3 +53,26 @@ class GraphIndicatorField(GraphIndicator):
         if self.icon:
             res['icon'] = self.icon.eval(res)
         return res
+
+
+class GraphIndicatorField(GraphIndicator):
+
+    def __init__(self, graph_type, element):
+        super(GraphIndicatorField, self).__init__(graph_type, element)
+        self._fields = [f for f in element if f.tag == 'field']
+
+    @property
+    def fields(self):
+        return [f.get('name') for f in self._fields]
+
+    def process(self, values, fields, total_values=None):
+        if total_values is None:
+            total_values = []
+        value = 0
+        total = 0
+        for field in self._fields:
+            data = [v[field.get('name')] for v in values]
+            value += get_value_for_operator(field.get('operator'), data)
+            total_data = [v[field.get('name')] for v in total_values]
+            total += get_value_for_operator(field.get('operator'), total_data)
+        return super(GraphIndicatorField, self).process(value, total)
