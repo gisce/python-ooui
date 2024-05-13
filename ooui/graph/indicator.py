@@ -1,7 +1,7 @@
 from ooui.graph.base import Graph
 from ooui.helpers import parse_bool_attribute, replace_entities
 from ooui.helpers.conditions import ConditionParser
-from ooui.graph.fields import get_value_for_operator
+from ooui.graph.fields import get_value_for_operator, round_number
 
 
 class GraphIndicator(Graph):
@@ -51,11 +51,24 @@ class GraphIndicatorField(GraphIndicator):
     def fields(self):
         return [f.get('name') for f in self._fields]
 
-    def process(self, values, fields, options=None):
-        result = 0
+    def process(self, values, fields, total_values=None, options=None):
+        if total_values is None:
+            total_values = []
+        value = 0
+        total = 0
         for field in self._fields:
             data = [v[field.get('name')] for v in values]
-            result += get_value_for_operator(field.get('operator'), data)
-        return {
-            'value': result,
+            value += get_value_for_operator(field.get('operator'), data)
+            total_data = [v[field.get('name')] for v in total_values]
+            total += get_value_for_operator(field.get('operator'), total_data)
+        res = {
+            'value': value,
+            'total': total,
         }
+        if self.show_percent:
+            res['percent'] = round_number(value / total * 100)
+        if self.color:
+            res['color'] = self.color.eval(res)
+        if self.icon:
+            res['icon'] = self.icon.eval(res)
+        return res

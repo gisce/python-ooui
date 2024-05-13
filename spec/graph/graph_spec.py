@@ -18,7 +18,7 @@ with description('A Graph'):
 
     with it('should suport indicatorField graphs'):
         xml = """<?xml version="1.0"?>
-        <graph string="My indicator" type="indicatorField" color="red:debt>0;green:debt==0" icon="slack">
+        <graph string="My indicator" showPercent="1" type="indicatorField" color="red:debt>0;green:debt==0" icon="slack">
             <field name="potencia" operator="+" />
         </graph>
         """
@@ -29,6 +29,7 @@ with description('A Graph'):
         expect(str(graph.icon)).to(equal('slack'))
         expect(str(graph.color)).to(equal('red:debt>0;green:debt==0'))
         expect(graph.fields).to(contain_only('potencia'))
+        expect(graph.show_percent).to(be_true)
 
     with it("should parse a chart graph XML with type line"):
         xml = """<?xml version="1.0"?>

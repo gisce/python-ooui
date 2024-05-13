@@ -37,12 +37,36 @@ with description('When process a graph'):
 
     with it('should process indicatorField graph'):
         xml = """<?xml version="1.0"?>
-        <graph string="My indicator" type="indicatorField" color="red:debt>0;green:debt==0" icon="slack">
+        <graph string="My indicator" type="indicatorField" color="red:value>0;green:value==0" icon="slack">
             <field name="potencia" operator="+" />
         </graph>
         """
         result = get_graph_data(xml, 'polissa')
-        expect(result).to(equal({'value': 275.72}))
+        expect(result).to(have_keys(
+            value=275.72, color='red'
+        ))
+
+    with it('should process indicatorField graph'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" showPercent="1" type="indicatorField" color="red:value>0;green:value==0" totalDomain="[]" icon="slack">
+            <field name="potencia" operator="+" />
+        </graph>
+        """
+        total_values = models['polissa'].data
+        t20A_values = [v for v in total_values if v['tarifa'][1] == "2.0A"]
+        g = parse_graph(xml)
+        result = g.process(
+            t20A_values,
+            fields=models['polissa'].fields,
+            total_values=total_values
+        )
+        expect(result).to(have_keys(
+            value=77.72,
+            percent=28.19,
+            total=275.72,
+            color='red',
+            icon='slack',
+        ))
 
     with it('should do basic test with one y axis'):
         xml = """<?xml version="1.0"?>

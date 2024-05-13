@@ -70,3 +70,7 @@ with description('Helpers module'):
             with it('should represent as string'):
                 c = ConditionParser("blue:valid==False")
                 expect(str(c)).to(equal('blue:valid==False'))
+
+            with it('should eval without conditions'):
+                c = ConditionParser("slack")
+                expect(c.eval({'patata': 1})).to(equal('slack'))
