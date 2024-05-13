@@ -33,7 +33,7 @@ class GraphIndicator(Graph):
 
     @property
     def total_domain(self):
-        return self._total_domain.parse(self.domain_parse_values)
+        return self._total_domain
 
     @property
     def show_percent(self):

@@ -15,8 +15,8 @@ with description('A Graph'):
         expect(graph.type).to(equal('indicator'))
         expect(str(graph.icon)).to(equal('slack'))
         expect(str(graph.color)).to(equal('red:debt>0;green:debt==0'))
-        graph.domain_parse_values = {'uid': 3}
-        expect(graph.total_domain).to(equal([('user', '=', 3)]))
+        expect(str(graph.total_domain)).to(equal("[('user', '=', uid)]"))
+        expect(graph.total_domain.parse({'uid': 3})).to(equal([('user', '=', 3)]))
 
     with it('should suport indicatorField graphs'):
         xml = """<?xml version="1.0"?>
