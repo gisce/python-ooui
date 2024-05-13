@@ -36,3 +36,9 @@ class Domain(object):
 
     def __str__(self):
         return self.domain
+
+    def __bool__(self):
+        return bool(self.domain)
+
+    def __nonzero__(self):
+        return self.__bool__()

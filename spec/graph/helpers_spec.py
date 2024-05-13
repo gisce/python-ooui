@@ -3,6 +3,7 @@ from expects import *
 
 from ooui.helpers import parse_bool_attribute
 from ooui.helpers.conditions import ConditionParser
+from ooui.helpers.domain import Domain
 
 
 with description('Helpers module'):
@@ -74,3 +75,9 @@ with description('Helpers module'):
             with it('should eval without conditions'):
                 c = ConditionParser("slack")
                 expect(c.eval({'patata': 1})).to(equal('slack'))
+
+    with description('when evaluating a domain'):
+        with description("an empty domain"):
+            with it('should evaluate to false'):
+                d = Domain("")
+                expect(bool(d)).to(be_false)
