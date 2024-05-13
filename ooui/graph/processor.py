@@ -17,7 +17,10 @@ def process_graph_data(ooui, values, fields, options=None):
     :returns: A dictionary containing the final processed data and flags like
         isGroup and isStack.
     """
-    return ooui.process(values, fields, options=options)
+    if ooui.type == "indicatorField":
+        return ooui.process(values, fields)
+    else:
+        return ooui.process(values, fields, options=options)
 
 
 def get_values_for_y_field(entries, field_name, fields):

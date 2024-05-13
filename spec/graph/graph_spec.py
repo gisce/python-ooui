@@ -7,7 +7,7 @@ from ooui.graph.indicator import GraphIndicator, GraphIndicatorField
 with description('A Graph'):
     with it('should parse a basic XML title and type indicator'):
         xml = """<?xml version="1.0"?>
-        <graph string="My indicator" type="indicator" color="red:debt>0;green:debt==0" icon="slack" />
+        <graph string="My indicator" type="indicator" color="red:debt>0;green:debt==0" icon="slack"  totalDomain="[('user', '=', uid)]"/>
         """
         graph = parse_graph(xml)
         assert isinstance(graph, GraphIndicator)
@@ -15,6 +15,8 @@ with description('A Graph'):
         expect(graph.type).to(equal('indicator'))
         expect(str(graph.icon)).to(equal('slack'))
         expect(str(graph.color)).to(equal('red:debt>0;green:debt==0'))
+        graph.domain_parse_values = {'uid': 3}
+        expect(graph.total_domain).to(equal([('user', '=', 3)]))
 
     with it('should suport indicatorField graphs'):
         xml = """<?xml version="1.0"?>

@@ -2,6 +2,7 @@ from __future__ import division
 from ooui.graph.base import Graph
 from ooui.helpers import parse_bool_attribute, replace_entities
 from ooui.helpers.conditions import ConditionParser
+from ooui.helpers.domain import Domain
 from ooui.graph.fields import get_value_for_operator, round_number
 
 
@@ -16,10 +17,11 @@ class GraphIndicator(Graph):
         self._icon = ConditionParser(replace_entities(element.get('icon'))) if element.get(
             'icon') else None
         self._suffix = element.get('suffix') if element.get('suffix') else None
-        self._total_domain = replace_entities(
-            element.get('totalDomain')) if element.get('totalDomain') else None
+        self._total_domain = Domain(replace_entities(
+            element.get('totalDomain')) if element.get('totalDomain') else None)
         self._show_percent = parse_bool_attribute(
             element.get('showPercent')) if element.get('showPercent') else False
+        self.domain_parse_values = {}
 
     @property
     def color(self):
@@ -31,7 +33,7 @@ class GraphIndicator(Graph):
 
     @property
     def total_domain(self):
-        return self._total_domain
+        return self._total_domain.parse(self.domain_parse_values)
 
     @property
     def show_percent(self):
