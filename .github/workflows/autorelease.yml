@@ -73,6 +73,7 @@ jobs:
           if [[ $VERSION_TYPE != false ]]; then
             git config user.name Release Bot
             git config user.email github-actions@github.com
+            git status
             bump2version $VERSION_TYPE --tag --commit -m "Bump to v{new_version}" $VERSION_FILE
             git push origin main --tags
           fi
