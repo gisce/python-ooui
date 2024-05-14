@@ -48,7 +48,7 @@ with description('When process a graph'):
 
     with it('should process indicatorField graph'):
         xml = """<?xml version="1.0"?>
-        <graph string="My indicator" showPercent="1" type="indicatorField" color="red:value>0;green:value==0" totalDomain="[]" icon="slack">
+        <graph string="My indicator" showPercent="1" type="indicatorField" color="red:value>0;green:value==0" totalDomain="[]" icon="slack" suffix="kW">
             <field name="potencia" operator="+" />
         </graph>
         """
@@ -66,6 +66,7 @@ with description('When process a graph'):
             total=275.72,
             color='red',
             icon='slack',
+            suffix='kW',
         ))
 
     with it('should process indicator graph'):
