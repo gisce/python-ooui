@@ -2,7 +2,7 @@ name: BUMP Version
 on:
   push:
     # For copy pase proposes, change this variable
-    branches: [ master ]
+    branches: [ "main" ]
 
 concurrency:
   group: ${{ github.workflow }}
@@ -74,5 +74,5 @@ jobs:
             git config user.name Release Bot
             git config user.email github-actions@github.com
             bump2version $VERSION_TYPE --tag --commit -m "Bump to v{new_version}" $VERSION_FILE
-            git push origin master --tags
+            git push origin main --tags
           fi
