@@ -155,5 +155,6 @@ class GraphChart(Graph):
         return {
             'data': final_data,
             'isGroup': is_stack or is_group,
-            'isStack': is_stack
+            'isStack': is_stack,
+            'type': self.type,
         }

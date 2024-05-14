@@ -67,6 +67,7 @@ with description('When process a graph'):
             color='red',
             icon='slack',
             suffix='kW',
+            type='indicatorField',
         ))
 
     with it('should process indicator graph'):
@@ -87,6 +88,7 @@ with description('When process a graph'):
             total=33,
             color='green',
             icon='slack',
+            type='indicator',
         ))
 
     with it('should do basic test with one y axis'):
@@ -100,6 +102,7 @@ with description('When process a graph'):
         expect(result['data']).to(not_(be_empty))
         expect(result['isGroup']).to(be_false)
         expect(result['isStack']).to(be_false)
+        expect(result['type']).to(equal('pie'))
 
         data = result['data']
 
@@ -163,6 +166,7 @@ with description('When process a graph'):
 
         expect(is_group).to(be_false)
         expect(is_stack).to(be_false)
+        expect(result['type']).to(equal('line'))
 
         expect(len(data)).to(equal(13))
         expect(any(entry['x'] is False for entry in data)).to(be_false)
@@ -181,6 +185,7 @@ with description('When process a graph'):
 
         expect(is_group).to(be_true)
         expect(is_stack).to(be_false)
+        expect(result['type']).to(equal('bar'))
 
         expect(len(data)).to(equal(15))
         obj1 = next((d for d in data if d['x'] == "2020-09-30"), None)
