@@ -73,6 +73,6 @@ jobs:
           if [[ $VERSION_TYPE != false ]]; then
             git config --global user.name Release Bot
             git config --global user.email github-actions@github.com
-            bump2version $VERSION_TYPE --tag --commit -m "Bump to v{new_version}" $VERSION_FILE
+            bump2version $VERSION_TYPE --tag --commit -m "Bump to v{new_version}" $VERSION_FILE --verbose
             git push origin main --tags
           fi
