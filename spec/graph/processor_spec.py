@@ -186,6 +186,7 @@ with description('When process a graph'):
         expect(is_group).to(be_true)
         expect(is_stack).to(be_false)
         expect(result['type']).to(equal('bar'))
+        expect(result['num_items']).to(equal(len(models['lectura'].data)))
 
         expect(len(data)).to(equal(15))
         obj1 = next((d for d in data if d['x'] == "2020-09-30"), None)

@@ -157,4 +157,5 @@ class GraphChart(Graph):
             'isGroup': is_stack or is_group,
             'isStack': is_stack,
             'type': self.type,
+            'num_items': len(values),
         }
