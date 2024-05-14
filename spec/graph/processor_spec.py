@@ -362,6 +362,7 @@ with description('When process a graph'):
         expect(data).to(not_(be_none))
         # 13 is only data with gaps
         expect(len(data)).not_to(equal(13))
+        expect(sorted(data, key=lambda x: x['x'])).to(equal(data))
 
         obj1 = next((d for d in data if d['x'] == u"2019-01-01"), None)
         expect(obj1).to(not_(be_none))
