@@ -198,6 +198,8 @@ def get_date_format(date_str):
     """
     if ':' in date_str:
         return '%Y-%m-%d %H:%M:%S'
+    elif date_str.count('-') == 1:
+        return '%Y-%m'
     else:
         return '%Y-%m-%d'
 
