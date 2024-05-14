@@ -1,5 +1,11 @@
 from setuptools import setup, find_packages
 
+with open("requirements.txt", "r") as f:
+    requirements = f.read().splitlines()
+
+with open("requirements-dev.txt", "r") as f:
+    requirements_dev = f.read().splitlines()
+
 setup(
     name='ooui',
     description='Open Object User Interface',
@@ -10,15 +16,7 @@ setup(
     license='MIT',
     long_description='''Open Object User Interface for GISCE-ERP''',
     provides=['ooui'],
-    install_requires=[
-        'lxml',
-        'python-dateutil',
-        'six',
-        'simpleeval<0.9.12',
-    ],
-    tests_require=[
-        'mamba',
-        'expects',
-    ],
+    install_requires=requirements,
+    tests_require=requirements_dev,
     packages=find_packages()
 )
