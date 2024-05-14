@@ -71,9 +71,8 @@ jobs:
             VERSION_TYPE="patch"
           fi
           if [[ $VERSION_TYPE != false ]]; then
-            git config user.name Release Bot
-            git config user.email github-actions@github.com
-            git status
+            git config --global user.name Release Bot
+            git config --global user.email github-actions@github.com
             bump2version $VERSION_TYPE --tag --commit -m "Bump to v{new_version}" $VERSION_FILE
             git push origin main --tags
           fi
