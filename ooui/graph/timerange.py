@@ -20,7 +20,7 @@ def process_timerange_data(values, timerange, interval=1):
         combined_values, timerange, interval
     )
 
-    return filled_values
+    return sorted(filled_values, key=lambda k: k['x'])
 
 
 def fill_gaps_in_timerange_data(values, timerange, interval):
