@@ -50,6 +50,7 @@ class GraphIndicator(Graph):
         res = {
             'value': value,
             'total': total,
+            'type': self.type,
         }
         if self.suffix:
             res['suffix'] = self.suffix
