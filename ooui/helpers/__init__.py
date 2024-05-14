@@ -1,4 +1,7 @@
+from __future__ import absolute_import
 import six
+from .conditions import ConditionParser
+from .domain import Domain
 
 
 def parse_bool_attribute(attribute):
