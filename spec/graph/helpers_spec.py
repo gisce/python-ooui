@@ -1,9 +1,7 @@
 from mamba import *
 from expects import *
 
-from ooui.helpers import parse_bool_attribute
-from ooui.helpers.conditions import ConditionParser
-from ooui.helpers.domain import Domain
+from ooui.helpers import parse_bool_attribute, ConditionParser, Domain
 
 
 with description('Helpers module'):

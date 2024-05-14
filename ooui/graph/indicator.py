@@ -1,8 +1,8 @@
 from __future__ import division
 from ooui.graph.base import Graph
-from ooui.helpers import parse_bool_attribute, replace_entities
-from ooui.helpers.conditions import ConditionParser
-from ooui.helpers.domain import Domain
+from ooui.helpers import (
+    parse_bool_attribute, replace_entities, ConditionParser, Domain
+)
 from ooui.graph.fields import get_value_for_operator, round_number
 
 
