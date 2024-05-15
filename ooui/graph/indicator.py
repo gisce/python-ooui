@@ -52,14 +52,16 @@ class GraphIndicator(Graph):
             'total': total,
             'type': self.type,
         }
+        if total:
+            res['percent'] = round_number(value / total * 100)
         if self.suffix:
             res['suffix'] = self.suffix
-        if self.show_percent:
-            res['percent'] = round_number(value / total * 100)
         if self.color:
             res['color'] = self.color.eval(res)
         if self.icon:
             res['icon'] = self.icon.eval(res)
+        if not self.show_percent:
+            res.pop('percent', None)
         return res
 
 
