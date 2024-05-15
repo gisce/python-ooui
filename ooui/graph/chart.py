@@ -147,9 +147,13 @@ class GraphChart(Graph):
             final_data = process_timerange_data(
                 final_data, self.timerange, self.interval
             )
-        elif self.type == 'pie':
+        if self.type == 'pie':
             final_data = sorted(
-                adjusted_uninformed_data, key=lambda x: x['value'], reverse=True
+                final_data, key=lambda x: x['value'], reverse=True
+            )
+        else:
+            final_data = sorted(
+                final_data, key=lambda x: '{x}-{type}'.format(**x)
             )
 
         return {
