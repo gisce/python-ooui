@@ -84,8 +84,12 @@ def get_value_for_operator(operator, values):
         avg = total_sum / len(values)
         return round_number(avg)
     elif operator == "min":
+        if not values:
+            return 0
         return min(values)
     elif operator == "max":
+        if not values:
+            return 0
         return max(values)
     else:
         raise ValueError("Unsupported operator: {}".format(operator))

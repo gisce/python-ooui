@@ -122,12 +122,22 @@ with description('Testing get_value_for_operator') as self:
             values = [10, 3, 45, 7]
             result = get_value_for_operator('min', values)
             expect(result).to(equal(3))
+        with context('if sequence is empty'):
+            with it('should return 0'):
+                values = []
+                result = get_value_for_operator('min', values)
+                expect(result).to(equal(0))
 
     with context('when operator is "max"'):
         with it('should return the maximum value'):
             values = [10, 3, 45, 7]
             result = get_value_for_operator('max', values)
             expect(result).to(equal(45))
+        with context('if sequence is empty'):
+            with it('should return 0'):
+                values = []
+                result = get_value_for_operator('max', values)
+                expect(result).to(equal(0))
 
     with context('when an unsupported operator is provided'):
         with it('should raise a ValueError'):
