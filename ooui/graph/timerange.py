@@ -38,6 +38,7 @@ def fill_gaps_in_timerange_data(values, timerange, interval):
     unique_values = get_unique_values_grouped_by(values, 'type-stacked')
 
     for key, values_for_key in unique_values.items():
+        values_for_key = sorted(values_for_key, key=lambda k: k['x'])
         for i in range(len(values_for_key)):
             value = values_for_key[i]
             final_values.append(value)

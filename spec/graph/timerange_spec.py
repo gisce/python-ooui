@@ -265,7 +265,7 @@ with description('Testing fill_gaps_in_timerange_data') as self:
 with description('Testing process_timerange_data') as self:
 
     with context('when processing time range data'):
-        with it('should return the final combined and filled values'):
+        with it('should return the final combined and filled values by day'):
             values_data = [
                 {'x': '2024-05-01', 'type': 'Revenue', 'stacked': 'A',
                  'value': 100, 'operator': '+'},
@@ -288,4 +288,55 @@ with description('Testing process_timerange_data') as self:
                 {'x': '2024-05-04', 'type': 'Revenue', 'stacked': 'A', 'value': 0},
                 {'x': '2024-05-05', 'type': 'Revenue', 'stacked': 'A', 'value': 200, 'operator': '+'},
                 {'x': '2024-06-01', 'type': 'Profit', 'stacked': 'B', 'value': 300, 'operator': '+'}
+            ))
+
+        with it('should return the final combined and filled values by month'):
+            values_data = [
+                {'x': '2024-01', 'type': 'Revenue', 'stacked': None,
+                 'value': 100, 'operator': '+'},
+                {'x': '2024-01', 'type': 'Profit', 'stacked': None,
+                 'value': 50, 'operator': '+'},
+                {'x': '2024-02', 'type': 'Revenue', 'stacked': None,
+                 'value': 200, 'operator': '+'},
+                {'x': '2024-02', 'type': 'Profit', 'stacked': None,
+                 'value': 100, 'operator': '+'},
+                {'x': '2024-03', 'type': 'Revenue', 'stacked': None,
+                 'value': 300, 'operator': '+'},
+                {'x': '2024-03', 'type': 'Profit', 'stacked': None,
+                 'value': 150, 'operator': '+'},
+                {'x': '2024-04', 'type': 'Profit', 'stacked': None,
+                 'value': 400, 'operator': '+'},
+                {'x': '2024-05', 'type': 'Profit', 'stacked': None,
+                 'value': 500, 'operator': '+'},
+                {'x': '2024-06', 'type': 'Profit', 'stacked': None,
+                 'value': 600, 'operator': '+'},
+                {'x': '2024-06', 'type': 'Revenue', 'stacked': None,
+                 'value': 300, 'operator': '+'},
+            ]
+
+            result = process_timerange_data(values_data, 'month')
+
+            expect(result).to(contain_only(
+                {'stacked': None, 'operator': '+', 'x': '2024-01',
+                 'type': 'Profit', 'value': 50.0},
+            {'stacked': None, 'operator': '+', 'x': '2024-01',
+             'type': 'Revenue', 'value': 100.0},
+            {'stacked': None, 'operator': '+', 'x': '2024-02', 'type': 'Profit',
+             'value': 100.0},
+            {'stacked': None, 'operator': '+', 'x': '2024-02',
+             'type': 'Revenue', 'value': 200.0},
+            {'stacked': None, 'operator': '+', 'x': '2024-03', 'type': 'Profit',
+             'value': 150.0},
+            {'stacked': None, 'operator': '+', 'x': '2024-03',
+             'type': 'Revenue', 'value': 300.0},
+            {'stacked': None, 'operator': '+', 'x': '2024-04', 'type': 'Profit',
+             'value': 400.0},
+            {'x': '2024-04', 'type': 'Revenue', 'stacked': None, 'value': 0},
+            {'stacked': None, 'operator': '+', 'x': '2024-05', 'type': 'Profit',
+             'value': 500.0},
+            {'x': '2024-05', 'type': 'Revenue', 'stacked': None, 'value': 0},
+            {'stacked': None, 'operator': '+', 'x': '2024-06', 'type': 'Profit',
+             'value': 600.0},
+            {'stacked': None, 'operator': '+', 'x': '2024-06',
+             'type': 'Revenue', 'value': 300.0},
             ))
