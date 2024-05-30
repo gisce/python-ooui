@@ -1,12 +1,13 @@
 from mamba import description, context, it
 from expects import *
+from datetime import datetime
 
 from ooui.graph.timerange import (
     get_unique_values_grouped_by, get_format_for_units, check_dates_consecutive,
     get_date_format, convert_date_to_time_range_adjusted,
     adjust_x_values_for_time_range, combine_values_for_timerange,
     get_missing_consecutive_dates, fill_gaps_in_timerange_data,
-    process_timerange_data
+    process_timerange_data, add_time_unit
 )
 
 
@@ -340,3 +341,35 @@ with description('Testing process_timerange_data') as self:
             {'stacked': None, 'operator': '+', 'x': '2024-06',
              'type': 'Revenue', 'value': 300.0},
             ))
+
+    with description('add_time_unit function'):
+        with context('when adding different time units'):
+            with it('adds days correctly'):
+                start_date = datetime(2021, 1, 1)
+                result = add_time_unit(start_date, 10, 'days')
+                expect(result).to(equal(datetime(2021, 1, 11)))
+
+            with it('adds weeks correctly'):
+                start_date = datetime(2021, 1, 1)
+                result = add_time_unit(start_date, 2, 'weeks')
+                expect(result).to(equal(datetime(2021, 1, 15)))
+
+            with it('adds months correctly'):
+                start_date = datetime(2021, 1, 1)
+                result = add_time_unit(start_date, 1, 'months')
+                expect(result).to(equal(datetime(2021, 2, 1)))
+
+            with it('adds years correctly'):
+                start_date = datetime(2021, 1, 1)
+                result = add_time_unit(start_date, 1, 'years')
+                expect(result).to(equal(datetime(2022, 1, 1)))
+
+            with it('adds hours correctly'):
+                start_date = datetime(2021, 1, 1, 12, 0)
+                result = add_time_unit(start_date, 5, 'hours')
+                expect(result).to(equal(datetime(2021, 1, 1, 17, 0)))
+
+            with it('raises an error for unsupported units'):
+                start_date = datetime(2021, 1, 1)
+                expect(lambda: add_time_unit(start_date, 10, 'minutes')).to(
+                    raise_error(ValueError))

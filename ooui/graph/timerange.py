@@ -74,6 +74,8 @@ def add_time_unit(start_date, interval, units):
         return start_date + relativedelta(months=interval)
     elif units == 'years':
         return start_date + relativedelta(years=interval)
+    elif units == 'hours':
+        return start_date + timedelta(hours=interval)
     else:
         raise ValueError("Unsupported units: {}".format(units))
 
