@@ -37,7 +37,7 @@ with description('A Graph'):
 
     with it("should parse a chart graph XML with type line"):
         xml = """<?xml version="1.0"?>
-    <graph type="line">
+    <graph type="line" y_range="auto">
       <field name="data_alta" axis="x"/>
       <field name="data_alta" operator="+" axis="y"/>
     </graph>
@@ -51,3 +51,46 @@ with description('A Graph'):
         expect(graph.x.axis).to(equal('x'))
         expect(graph.y[0].axis).to(equal('y'))
         expect(graph.y[0].operator).to(equal('+'))
+        expect(graph.y_range).to(equal('auto'))
+
+    with description("Processing a Graph"):
+        with description("A line graph with y_range auto"):
+            with it("should return yAxisProps to the result with min and max values"):
+                xml = """<?xml version="1.0"?>
+                <graph type="line" y_range="auto" timerange="day">
+                  <field name="date" axis="x"/>
+                  <field name="v" operator="+" axis="y"/>
+                </graph>
+                """
+                graph = parse_graph(xml)
+                values = [
+                    {'date': '2024-01-01', 'v': 10},
+                    {'date': '2024-01-02', 'v': 20},
+                    {'date': '2024-01-03', 'v': 30}
+                ]
+                fields = {'date': {'type': 'date'}, 'v': {'type': 'integer'}}
+                result = graph.process(values, fields)
+                expect(result['yAxisProps']).to(equal({
+                    'mode': 'auto',
+                    'min': 8,
+                    'max': 32
+                }))
+        with description("A line graph with y_range to full"):
+            with it("should return yAxisProps to the result with mode full"):
+                xml = """<?xml version="1.0"?>
+                <graph type="line" y_range="full" timerange="day">
+                  <field name="date" axis="x"/>
+                  <field name="v" operator="+" axis="y"/>
+                </graph>
+                """
+                graph = parse_graph(xml)
+                values = [
+                    {'date': '2024-01-01', 'v': 10},
+                    {'date': '2024-01-02', 'v': 20},
+                    {'date': '2024-01-03', 'v': 30}
+                ]
+                fields = {'date': {'type': 'date'}, 'v': {'type': 'integer'}}
+                result = graph.process(values, fields)
+                expect(result['yAxisProps']).to(equal({
+                    'mode': 'full',
+                }))

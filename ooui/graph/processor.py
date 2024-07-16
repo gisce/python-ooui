@@ -87,3 +87,24 @@ def get_all_objects_in_grouped_values(grouped):
         total_objects.extend(group['entries'])
 
     return total_objects
+
+
+def get_min_max(values, margin=0.1):
+    """
+    Calculate the minimum and maximum values from a list of dictionaries.
+    :param values: List of dictionaries.
+    :param margin: Margin to add to the min and max values.
+    :return: Dictionary with 'min' and 'max' keys.
+    """
+    if not values:
+        raise ValueError("The values array cannot be empty.")
+
+    value_list = [d['value'] for d in values]
+    min_value = min(value_list)
+    max_value = max(value_list)
+    calculated_margin = (max_value - min_value) * margin
+
+    return {
+        'min': int(min_value - calculated_margin),
+        'max': int(max_value + calculated_margin),
+    }
