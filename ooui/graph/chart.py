@@ -4,7 +4,9 @@ from ooui.graph.axis import parse_xy_axis
 from ooui.graph.fields import get_value_for_operator
 from ooui.graph.axis import get_y_axis_fieldname
 from ooui.graph.timerange import process_timerange_data
-from ooui.graph.processor import get_values_grouped_by_field, get_values_for_y_field
+from ooui.graph.processor import (
+    get_values_grouped_by_field, get_values_for_y_field, get_min_max
+)
 
 
 class GraphChart(Graph):
@@ -156,10 +158,18 @@ class GraphChart(Graph):
                 final_data, key=lambda x: '{x}-{type}'.format(**x)
             )
 
-        return {
+        result = {
             'data': final_data,
             'isGroup': is_stack or is_group,
             'isStack': is_stack,
             'type': self.type,
             'num_items': len(values),
         }
+
+        if self.type == "line" and self.y_range:
+            y_axis_props = {'mode': self.y_range}
+            if self.y_range == "auto":
+                y_axis_props.update(get_min_max(final_data))
+            result['yAxisProps'] = y_axis_props
+
+        return result

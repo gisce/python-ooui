@@ -7,7 +7,7 @@ import sys
 from ooui.graph import parse_graph
 from ooui.graph.processor import (
     get_values_grouped_by_field, get_all_objects_in_grouped_values,
-    get_values_for_y_field, process_graph_data
+    get_values_for_y_field, process_graph_data, get_min_max
 )
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -470,3 +470,77 @@ with description('Testing get_values_for_y_field') as self:
                 entries_data, 'category', fields_data
             )
             expect(labels).to(equal(['Fruit', 'Vegetable', 'Fruit']))
+
+with description('Testing get_min_max') as self:
+    with it('should return correct min and max with default margin'):
+        data = [
+            {'value': 10},
+            {'value': 20},
+            {'value': 30},
+        ]
+
+        result = get_min_max(data)
+
+        min_value = 10
+        max_value = 30
+        margin = (max_value - min_value) * 0.1
+        expected = {
+            'min': min_value - margin,
+            'max': max_value + margin,
+        }
+
+        expect(result).to(equal(expected))
+
+    with it('should return correct min and max with custom margin'):
+        data = [
+            {'value': 10},
+            {'value': 20},
+            {'value': 30},
+        ]
+
+        result = get_min_max(data, 0.2)
+
+        min_value = 10
+        max_value = 30
+        margin = (max_value - min_value) * 0.2
+        expected = {
+            'min': min_value - margin,
+            'max': max_value + margin,
+        }
+
+        expect(result).to(equal(expected))
+
+    with it('should return correct min and max for single element'):
+        data = [{'value': 10}]
+
+        result = get_min_max(data)
+
+        expected = {
+            'min': 10,
+            'max': 10,
+        }
+
+        expect(result).to(equal(expected))
+
+    with it('should handle negative values correctly'):
+        data = [
+            {'value': -10},
+            {'value': 0},
+            {'value': 10},
+        ]
+
+        result = get_min_max(data)
+
+        min_value = -10
+        max_value = 10
+        margin = (max_value - min_value) * 0.1
+        expected = {
+            'min': min_value - margin,
+            'max': max_value + margin,
+        }
+
+        expect(result).to(equal(expected))
+
+    with it('should throw an error for empty array'):
+        expect(lambda: get_min_max([])).to(
+            raise_error(ValueError, "The values array cannot be empty."))
