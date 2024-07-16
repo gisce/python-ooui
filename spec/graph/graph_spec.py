@@ -72,8 +72,10 @@ with description('A Graph'):
                 result = graph.process(values, fields)
                 expect(result['yAxisProps']).to(equal({
                     'mode': 'auto',
-                    'min': 8,
-                    'max': 32
+                    'valueOpts': {
+                        'min': 8,
+                        'max': 32
+                    }
                 }))
         with description("A line graph with y_range to full"):
             with it("should return yAxisProps to the result with mode full"):
