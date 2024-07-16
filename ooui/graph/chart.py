@@ -169,7 +169,7 @@ class GraphChart(Graph):
         if self.type == "line" and self.y_range:
             y_axis_props = {'mode': self.y_range}
             if self.y_range == "auto":
-                y_axis_props.update(get_min_max(final_data))
+                y_axis_props['valueOpts'] = get_min_max(final_data)
             result['yAxisProps'] = y_axis_props
 
         return result
