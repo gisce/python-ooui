@@ -91,6 +91,28 @@ with description('When process a graph'):
             type='indicator',
         ))
 
+    # Un test per quan el total sigui 0 no falli al calcular el percentatge
+    with it('should evaluate percent when total is 0'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" showPercent="1" type="indicator" color="green:value>15;red:value&gt;16" totalDomain="[]" icon="slack">
+        </graph>
+        """
+        total_values = 0
+        t20A_values = len([v for v in models['polissa'].data if v['tarifa'][1] == "2.0A"])
+        g = parse_graph(xml)
+        result = g.process(
+            t20A_values,
+            total=total_values
+        )
+        expect(result).to(have_keys(
+            value=16,
+            percent=0,
+            total=0,
+            color='green',
+            icon='slack',
+            type='indicator',
+        ))
+
     with it('should evaluate percent when percent is 0'):
         xml = """<?xml version="1.0"?>
         <graph string="My indicator" showPercent="0" type="indicator" color="blue:percent&gt;40;red:percent&lt;41" totalDomain="[]" icon="slack">

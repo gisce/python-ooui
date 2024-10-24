@@ -51,6 +51,7 @@ class GraphIndicator(Graph):
             'value': value,
             'total': total,
             'type': self.type,
+            'percent': 0,
         }
         if total:
             res['percent'] = round_number(value / total * 100)
