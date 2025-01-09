@@ -240,11 +240,17 @@ with description('Testing get_missing_consecutive_dates') as self:
             result = get_missing_consecutive_dates(dates_data, 'month')
             expect(result).to(equal(['2024-02', '2024-04']))
 
+    with context('when checking for missing weeks'):
+        with it('should return a list of missing weeks'):
+            dates_data = ['2024-01', '2024-03', '2024-05']
+            result = get_missing_consecutive_dates(dates_data, 'week')
+            expect(result).to(equal(['2024-02', '2024-04']))
+
 
 with description('Testing fill_gaps_in_timerange_data') as self:
 
     with context('when filling gaps in time range data'):
-        with it('should return the final values with gaps filled'):
+        with it('should return the final values with gaps filled by day'):
             values_data = [
                 {'x': '2024-05-01', 'type': 'Revenue', 'stacked': 'A', 'value': 100},
                 {'x': '2024-05-05', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
@@ -260,6 +266,22 @@ with description('Testing fill_gaps_in_timerange_data') as self:
                 {'x': '2024-05-04', 'type': 'Revenue', 'stacked': 'A', 'value': 0},
                 {'x': '2024-05-05', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
                 {'x': '2024-06-01', 'type': 'Profit', 'stacked': 'B', 'value': 300}
+            ))
+
+        with it('should return the final values with gaps filled by week'):
+            values_data = [
+                {'x': '2024-01', 'type': 'Revenue', 'stacked': 'A', 'value': 100},
+                {'x': '2024-02', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
+                {'x': '2024-04', 'type': 'Revenue', 'stacked': 'A', 'value': 300}
+            ]
+
+            result = fill_gaps_in_timerange_data(values_data, 'week', 1)
+
+            expect(result).to(contain_only(
+                {'x': '2024-01', 'type': 'Revenue', 'stacked': 'A', 'value': 100},
+                {'x': '2024-02', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
+                {'x': '2024-03', 'type': 'Revenue', 'stacked': 'A', 'value': 0},
+                {'x': '2024-04', 'type': 'Revenue', 'stacked': 'A', 'value': 300},
             ))
 
 
@@ -341,6 +363,36 @@ with description('Testing process_timerange_data') as self:
             {'stacked': None, 'operator': '+', 'x': '2024-06',
              'type': 'Revenue', 'value': 300.0},
             ))
+
+        with it('should return the final combined and filled values by week'):
+            values_data = [
+                {'x': '2024-01', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 100, 'operator': '+'},
+                {'x': '2024-02', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 200, 'operator': '+'},
+                {'x': '2024-03', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 300, 'operator': '+'},
+                {'x': '2024-05', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 500, 'operator': '+'}
+            ]
+
+            result = process_timerange_data(
+                values_data, 'week', 1,
+            )
+
+            expect(result).to(contain_only(
+                {'x': '2024-01', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 100, 'operator': '+'},
+                {'x': '2024-02', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 200, 'operator': '+'},
+                {'x': '2024-03', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 300, 'operator': '+'},
+                {'x': '2024-04', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 0},
+                {'x': '2024-05', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 500, 'operator': '+'}
+            ))
+
 
     with description('add_time_unit function'):
         with context('when adding different time units'):
