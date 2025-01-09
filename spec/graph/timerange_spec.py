@@ -364,6 +364,36 @@ with description('Testing process_timerange_data') as self:
              'type': 'Revenue', 'value': 300.0},
             ))
 
+        with it('should return the final combined and filled values by week'):
+            values_data = [
+                {'x': '2024-01', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 100, 'operator': '+'},
+                {'x': '2024-02', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 200, 'operator': '+'},
+                {'x': '2024-03', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 300, 'operator': '+'},
+                {'x': '2024-05', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 500, 'operator': '+'}
+            ]
+
+            result = process_timerange_data(
+                values_data, 'week', 1,
+            )
+
+            expect(result).to(contain_only(
+                {'x': '2024-01', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 100, 'operator': '+'},
+                {'x': '2024-02', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 200, 'operator': '+'},
+                {'x': '2024-03', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 300, 'operator': '+'},
+                {'x': '2024-04', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 0},
+                {'x': '2024-05', 'type': 'Revenue', 'stacked': 'A',
+                 'value': 500, 'operator': '+'}
+            ))
+
+
     with description('add_time_unit function'):
         with context('when adding different time units'):
             with it('adds days correctly'):

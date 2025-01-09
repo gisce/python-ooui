@@ -172,8 +172,8 @@ def convert_date_to_time_range_adjusted(date, timerange):
     :rtype: str
     :returns: The adjusted date in the specified time range format.
     """
-    format_str = get_date_format(date)
-    moment_date = datetime.strptime(date, format_str)
+    format_str = get_date_format(date, timerange)
+    moment_date = datetime_from_string(date, format_str)
 
     if timerange == 'hour':
         return moment_date.strftime('%Y-%m-%d %H:00')
@@ -189,7 +189,7 @@ def convert_date_to_time_range_adjusted(date, timerange):
         raise ValueError("Unsupported timerange: {}".format(timerange))
 
 
-def get_date_format(date_str):
+def get_date_format(date_str, timerange=None):
     """
     Determine the appropriate date format string based on whether the input
     string contains a colon.
@@ -203,7 +203,10 @@ def get_date_format(date_str):
     if ':' in date_str:
         return '%Y-%m-%d %H:%M:%S'
     elif date_str.count('-') == 1:
-        return '%Y-%m'
+        if timerange == 'month':
+            return '%Y-%m'
+        else:
+            return '%Y-%W'
     else:
         return '%Y-%m-%d'
 
@@ -281,8 +284,8 @@ def check_dates_consecutive(dates, unit):
     format_str = get_format_for_units(unit)
 
     for i in range(len(dates) - 1):
-        date1 = datetime.strptime(dates[i], format_str)
-        date2 = datetime.strptime(dates[i + 1], format_str)
+        date1 = datetime_from_string(dates[i], format_str)
+        date2 = datetime_from_string(dates[i + 1], format_str)
 
         if unit == 'hours':
             diff = (date2 - date1).total_seconds() / 3600
