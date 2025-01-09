@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
+from ooui.helpers.dates import datetime_from_string
 from ooui.graph.fields import get_value_for_operator
 
 
@@ -101,8 +102,8 @@ def get_missing_consecutive_dates(dates, timerange, interval=1):
     sorted_dates = sorted(dates)
 
     for i in range(len(sorted_dates) - 1):
-        date1 = datetime.strptime(sorted_dates[i], format_str)
-        date2 = datetime.strptime(sorted_dates[i + 1], format_str)
+        date1 = datetime_from_string(sorted_dates[i], format_str)
+        date2 = datetime_from_string(sorted_dates[i + 1], format_str)
 
         next_date = add_time_unit(date1, interval, units)
 
