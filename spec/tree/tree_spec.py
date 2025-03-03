@@ -42,5 +42,5 @@ with description('Tree') as self:
                             status="green:active==True"/>'''
             tree = parse_tree(xml)
             fields = tree.fields_in_conditions
-            expect(fields['colors']).to(equal({'state'}))
-            expect(fields['status']).to(equal({'active'}))
+            expect(fields['colors']).to(equal(['state']))
+            expect(fields['status']).to(equal(['active']))

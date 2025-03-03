@@ -35,8 +35,8 @@ class Tree(object):
         res = {}
         if self._colors:
             parser = ConditionParser(self._colors)
-            res['colors'] = parser.involved_fields
+            res['colors'] = list(parser.involved_fields)
         if self._status:
             parser = ConditionParser(self._status)
-            res['status'] = parser.involved_fields
+            res['status'] = list(parser.involved_fields)
         return res
