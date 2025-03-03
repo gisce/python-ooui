@@ -28,15 +28,15 @@ class ConditionParser(object):
 
     @property
     def involved_fields(self):
-        magic_dict = GetFieldsDict()
-        magic_dict.update(self.values)
-        magic_dict.update(DEFAULT_NAMES)
+        fields_tracker = GetFieldsDict()
+        fields_tracker.update(self.values)
+        fields_tracker.update(DEFAULT_NAMES)
         for key, condition in self.conditions:
             s = EvalWithCompoundTypes(
-                names=magic_dict, functions=self.functions, operators=self.operators
+                names=fields_tracker, functions=self.functions, operators=self.operators
             )
             s.eval(condition)
-        return magic_dict.fields
+        return fields_tracker.fields
 
     def eval(self, values):
         if not self.conditions:
