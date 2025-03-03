@@ -5,6 +5,23 @@ from datetime import datetime
 from simpleeval import EvalWithCompoundTypes, DEFAULT_OPERATORS, DEFAULT_NAMES
 
 
+class DummyObject:
+    def __eq__(self, other): return True
+    def __ne__(self, other): return True
+    def __lt__(self, other): return True
+    def __le__(self, other): return True
+    def __gt__(self, other): return True
+    def __ge__(self, other): return True
+    def __add__(self, other): return self
+    def __sub__(self, other): return self
+    def __mul__(self, other): return self
+    def __truediv__(self, other): return self
+    def __floordiv__(self, other): return self
+    def __mod__(self, other): return self
+    def __pow__(self, other): return self
+    def __repr__(self): return "DummyObject"
+
+
 class GetFieldsDict(dict):
 
     def __init__(self, *args, **kwargs):
@@ -14,7 +31,7 @@ class GetFieldsDict(dict):
     def __getitem__(self, key):
         if key not in self:
             self.fields.add(key)
-        return dict.get(self, key, key)
+        return dict.get(self, key, DummyObject())
 
 
 class ConditionParser(object):
