@@ -44,7 +44,7 @@ with description('Helpers module'):
                 result = self.cond.eval({'active': True, 'meter_type': 'X'})
                 expect(result).to(be_none)
 
-            with it('should use time builin'):
+            with it('should use time builtin'):
                 c = ConditionParser("grey:reconcile_id!=0;blue:amount_to_pay==0;red:date_maturity<time.strftime('%Y-%m-%d')")
                 from datetime import datetime, timedelta
                 dm = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
@@ -73,6 +73,13 @@ with description('Helpers module'):
             with it('should eval without conditions'):
                 c = ConditionParser("slack")
                 expect(c.eval({'patata': 1})).to(equal('slack'))
+
+            with description('When analyzing for involved fields'):
+                with it('should return involved fields'):
+                    c = ConditionParser(
+                        "grey:state in ('cancel','done');blue:remaining_hours<0;red:bool(date_deadline) & (date_deadline<current_date) & (state in ('draft','open'))")
+                    expect(c.involved_fields).to(
+                        equal({'state', 'remaining_hours', 'date_deadline'}))
 
     with description('when evaluating a domain'):
         with description("an empty domain"):
