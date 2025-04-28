@@ -3,6 +3,7 @@ import ast
 import operator
 import time
 import datetime
+import dateutil
 from simpleeval import EvalWithCompoundTypes, DEFAULT_OPERATORS, DEFAULT_NAMES
 
 
@@ -11,6 +12,7 @@ EVAL_FUNCTIONS = {
     'bool': bool,
     'datetime': datetime,
     'eval': ast.literal_eval,
+    'dateutil': dateutil,
 }
 
 
