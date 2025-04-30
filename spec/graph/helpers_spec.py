@@ -86,3 +86,11 @@ with description('Helpers module'):
             with it('should evaluate to false'):
                 d = Domain("")
                 expect(bool(d)).to(be_false)
+
+        with context("when the domain contains 'parent.invoice_id'"):
+            with it("should resolve the value correctly"):
+                domain_str = "[['invoice_id', '=', parent.invoice_id]]"
+                values = {'parent': {'invoice_id': 10}}
+                domain = Domain(domain_str)
+                result = domain.parse(values)
+                expect(result).to(equal([['invoice_id', '=', 10]]))

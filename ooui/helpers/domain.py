@@ -16,6 +16,20 @@ EVAL_FUNCTIONS = {
 }
 
 
+class DotDict(dict):
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError("object has no attribute '{}'".format(name))
+
+
+def make_dotdict(obj):
+    if isinstance(obj, dict):
+        return DotDict({k: make_dotdict(v) for k, v in obj.items()})
+    return obj
+
+
 class Domain(object):
     def __init__(self, domain):
         if not isinstance(domain, six.string_types):
@@ -30,6 +44,7 @@ class Domain(object):
 
         operators = DEFAULT_OPERATORS.copy()
         operators[ast.BitAnd] = operator.and_
+        values = make_dotdict(values)
         values.update(DEFAULT_NAMES.copy())
         s = EvalWithCompoundTypes(
             names=values, functions=EVAL_FUNCTIONS, operators=operators
