@@ -24,4 +24,4 @@ def preprocess_feature_tags(xml_str, feature_checker):
         else:
             parent.remove(node)
 
-    return etree.tostring(doc)
+    return etree.tostring(doc, encoding='unicode')
