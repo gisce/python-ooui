@@ -5,7 +5,8 @@ from ooui.graph.fields import get_value_for_operator
 from ooui.graph.axis import get_y_axis_fieldname
 from ooui.graph.timerange import process_timerange_data
 from ooui.graph.processor import (
-    get_values_grouped_by_field, get_values_for_y_field, get_min_max
+    get_values_grouped_by_field, get_values_grouped_by_fields,
+    get_values_for_y_field, get_min_max
 )
 
 
@@ -40,6 +41,9 @@ class GraphChart(Graph):
 
             if y.label and y.label not in fields:
                 fields.append(y.label)
+
+            if y.stacked and y.stacked not in fields:
+                fields.append(y.stacked)
 
         return fields
 
@@ -88,13 +92,25 @@ class GraphChart(Graph):
                         'stacked': y_field.stacked
                     })
                 else:
-                    values_grouped_by_y_label = get_values_grouped_by_field(
-                        y_field.label, fields, objects_for_x_value
-                    )
+                    if y_field.stacked not in fields:
+                        values_grouped_by_y_label = get_values_grouped_by_field(
+                            y_field.label, fields, objects_for_x_value
+                        )
+                    else:
+                        values_grouped_by_y_label = get_values_grouped_by_fields(
+                            [y_field.label, y_field.stacked],
+                            fields,
+                            objects_for_x_value
+                        )
 
                     for y_unique_value, grouped_entries in values_grouped_by_y_label.items():
                         entries = grouped_entries['entries']
                         label = grouped_entries['label']
+
+                        if isinstance(y_unique_value, tuple):
+                            y_label, stacked = y_unique_value
+                        else:
+                            stacked = y_field.stacked
 
                         values_for_y_field = get_values_for_y_field(
                             entries, y_field.name, fields
@@ -108,7 +124,7 @@ class GraphChart(Graph):
                             'value': final_value,
                             'type': label,
                             'operator': y_field.operator,
-                            'stacked': y_field.stacked
+                            'stacked': stacked
                         })
 
         # Check if data should be flagged as grouped or stacked
