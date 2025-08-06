@@ -114,6 +114,11 @@ with description('Testing check_dates_consecutive') as self:
             result = check_dates_consecutive(['2024-01', '2024-03'], 'months')
             expect(result).to(equal(False))
 
+    with context('when the dates are not consecutive by minutes'):
+        with it('should return False'):
+            result = check_dates_consecutive(['2024-05-01 12:00', '2024-05-01 12:02'], 'minutes')
+            expect(result).to(equal(False))
+
 
 with description('Testing get_date_format') as self:
     with context('when the date string contains a colon'):
@@ -246,6 +251,20 @@ with description('Testing get_missing_consecutive_dates') as self:
             result = get_missing_consecutive_dates(dates_data, 'week')
             expect(result).to(equal(['2024-02', '2024-04']))
 
+    with context('when checking for missing minutes'):
+        with it('should return a list of missing minutes'):
+            dates_data = ['2024-05-01 12:00', '2024-05-01 12:02', '2024-05-01 12:04']
+            result = get_missing_consecutive_dates(dates_data, 'minute')
+            expect(result).to(equal(['2024-05-01 12:01', '2024-05-01 12:03']))
+        with context('when interval is 15'):
+            with it('should return a list of missing minutes with 15-minute intervals'):
+                dates_data = ['2024-05-01 12:00', '2024-05-01 13:00']
+                result = get_missing_consecutive_dates(dates_data, 'minute', 15)
+                expect(result).to(equal([
+                    '2024-05-01 12:15', '2024-05-01 12:30',
+                    '2024-05-01 12:45',
+                ]))
+
 
 with description('Testing fill_gaps_in_timerange_data') as self:
 
@@ -282,6 +301,23 @@ with description('Testing fill_gaps_in_timerange_data') as self:
                 {'x': '2024-02', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
                 {'x': '2024-03', 'type': 'Revenue', 'stacked': 'A', 'value': 0},
                 {'x': '2024-04', 'type': 'Revenue', 'stacked': 'A', 'value': 300},
+            ))
+
+        with it('should return the final values with gaps filled by minute'):
+            values_data = [
+                {'x': '2024-05-01 12:00', 'type': 'Revenue', 'stacked': 'A', 'value': 100},
+                {'x': '2024-05-01 12:02', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
+                {'x': '2024-05-01 12:04', 'type': 'Revenue', 'stacked': 'A', 'value': 300}
+            ]
+
+            result = fill_gaps_in_timerange_data(values_data, 'minute', 1)
+
+            expect(result).to(contain_only(
+                {'x': '2024-05-01 12:00', 'type': 'Revenue', 'stacked': 'A', 'value': 100},
+                {'x': '2024-05-01 12:01', 'type': 'Revenue', 'stacked': 'A', 'value': 0},
+                {'x': '2024-05-01 12:02', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
+                {'x': '2024-05-01 12:03', 'type': 'Revenue', 'stacked': 'A', 'value': 0},
+                {'x': '2024-05-01 12:04', 'type': 'Revenue', 'stacked': 'A', 'value': 300}
             ))
 
 
@@ -423,5 +459,5 @@ with description('Testing process_timerange_data') as self:
 
             with it('raises an error for unsupported units'):
                 start_date = datetime(2021, 1, 1)
-                expect(lambda: add_time_unit(start_date, 10, 'minutes')).to(
+                expect(lambda: add_time_unit(start_date, 10, 'kg')).to(
                     raise_error(ValueError))

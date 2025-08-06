@@ -77,6 +77,8 @@ def add_time_unit(start_date, interval, units):
         return start_date + relativedelta(years=interval)
     elif units == 'hours':
         return start_date + timedelta(hours=interval)
+    elif units == 'minutes':
+        return start_date + timedelta(minutes=interval)
     else:
         raise ValueError("Unsupported units: {}".format(units))
 
@@ -287,7 +289,9 @@ def check_dates_consecutive(dates, unit):
         date1 = datetime_from_string(dates[i], format_str)
         date2 = datetime_from_string(dates[i + 1], format_str)
 
-        if unit == 'hours':
+        if unit == 'minutes':
+            diff = (date2 - date1).total_seconds() / 60
+        elif unit == 'hours':
             diff = (date2 - date1).total_seconds() / 3600
         elif unit == 'days':
             diff = (date2 - date1).days
