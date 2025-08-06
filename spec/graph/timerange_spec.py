@@ -76,7 +76,7 @@ with description('Testing get_format_for_units') as self:
     with context('when units is "hours" or default'):
         with it('should return the default date format "YYYY-MM-DD HH:mm"'):
             result = get_format_for_units('hours')
-            expect(result).to(equal('%Y-%m-%d %H:%M'))
+            expect(result).to(equal('%Y-%m-%d %H:00'))
 
         with it('should return the default format for an unknown unit'):
             result = get_format_for_units('minutes')
@@ -158,10 +158,15 @@ with description('Testing convert_date_to_time_range_adjusted') as self:
             result = convert_date_to_time_range_adjusted('2024-05-01', 'year')
             expect(result).to(equal('2024'))
 
+    with context('when the timerange is "minute"'):
+        with it('should return the adjusted date with minute precision'):
+            result = convert_date_to_time_range_adjusted('2024-05-01 14:35:00', 'minute')
+            expect(result).to(equal('2024-05-01 14:35'))
+
     with context('when an unsupported timerange is provided'):
         with it('should raise a ValueError'):
             expect(lambda: convert_date_to_time_range_adjusted('2024-05-01', 'decade')).to(
-                raise_error(ValueError, 'Unsupported timerange: decade')
+                raise_error(ValueError, 'Unsupported timerange: decades')
             )
 
 

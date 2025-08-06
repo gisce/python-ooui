@@ -176,19 +176,8 @@ def convert_date_to_time_range_adjusted(date, timerange):
     """
     format_str = get_date_format(date, timerange)
     moment_date = datetime_from_string(date, format_str)
-
-    if timerange == 'hour':
-        return moment_date.strftime('%Y-%m-%d %H:00')
-    elif timerange == 'day':
-        return moment_date.strftime('%Y-%m-%d')
-    elif timerange == 'week':
-        return moment_date.strftime('%Y-%W')
-    elif timerange == 'month':
-        return moment_date.strftime('%Y-%m')
-    elif timerange == 'year':
-        return moment_date.strftime('%Y')
-    else:
-        raise ValueError("Unsupported timerange: {}".format(timerange))
+    unit = "{}s".format(timerange)
+    return moment_date.strftime(get_format_for_units(unit))
 
 
 def get_date_format(date_str, timerange=None):
@@ -254,7 +243,11 @@ def get_format_for_units(units):
     :rtype: str
     :returns: The appropriate date format string based on the provided units.
     """
-    if units == 'days':
+    if units == 'minutes':
+        return '%Y-%m-%d %H:%M'
+    elif units == 'hours':
+        return '%Y-%m-%d %H:00'
+    elif units == 'days':
         return '%Y-%m-%d'
     elif units == 'weeks':
         return '%Y-%W'
@@ -263,7 +256,7 @@ def get_format_for_units(units):
     elif units == 'years':
         return '%Y'
     else:
-        return '%Y-%m-%d %H:%M'
+        raise ValueError("Unsupported timerange: {}".format(units))
 
 
 def check_dates_consecutive(dates, unit):
