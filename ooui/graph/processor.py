@@ -42,6 +42,35 @@ def get_values_for_y_field(entries, field_name, fields):
     ]
 
 
+def get_values_grouped_by_fields(fields_names, fields, values):
+    """
+    Group values by multiple fields.
+
+    :param list fields_names: A list of field names by which to group values.
+    :param dict fields: A dictionary containing field definitions.
+    :param list values: A list of dictionaries representing the values to be
+        grouped.
+
+    :rtype: dict
+    :returns: A dictionary where keys are tuples of field values and values are
+        dictionaries containing a label and an "entries" list.
+    """
+    grouped_values = {}
+
+    for entry in values:
+        key = tuple(get_value_and_label_for_field(fields, entry, field_name)['value']
+                    for field_name in fields_names)
+        label = ' - '.join(get_value_and_label_for_field(fields, entry, field_name)['label']
+                          for field_name in fields_names)
+
+        if key not in grouped_values:
+            grouped_values[key] = {'label': label, 'entries': []}
+
+        grouped_values[key]['entries'].append(entry)
+
+    return grouped_values
+
+
 def get_values_grouped_by_field(field_name, fields, values):
     """
     Group values by a specific field.
