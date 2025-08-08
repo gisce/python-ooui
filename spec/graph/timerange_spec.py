@@ -76,7 +76,7 @@ with description('Testing get_format_for_units') as self:
     with context('when units is "hours" or default'):
         with it('should return the default date format "YYYY-MM-DD HH:mm"'):
             result = get_format_for_units('hours')
-            expect(result).to(equal('%Y-%m-%d %H:%M'))
+            expect(result).to(equal('%Y-%m-%d %H:00'))
 
         with it('should return the default format for an unknown unit'):
             result = get_format_for_units('minutes')
@@ -112,6 +112,11 @@ with description('Testing check_dates_consecutive') as self:
     with context('when the dates are not consecutive by months'):
         with it('should return False'):
             result = check_dates_consecutive(['2024-01', '2024-03'], 'months')
+            expect(result).to(equal(False))
+
+    with context('when the dates are not consecutive by minutes'):
+        with it('should return False'):
+            result = check_dates_consecutive(['2024-05-01 12:00', '2024-05-01 12:02'], 'minutes')
             expect(result).to(equal(False))
 
 
@@ -153,10 +158,15 @@ with description('Testing convert_date_to_time_range_adjusted') as self:
             result = convert_date_to_time_range_adjusted('2024-05-01', 'year')
             expect(result).to(equal('2024'))
 
+    with context('when the timerange is "minute"'):
+        with it('should return the adjusted date with minute precision'):
+            result = convert_date_to_time_range_adjusted('2024-05-01 14:35:00', 'minute')
+            expect(result).to(equal('2024-05-01 14:35'))
+
     with context('when an unsupported timerange is provided'):
         with it('should raise a ValueError'):
             expect(lambda: convert_date_to_time_range_adjusted('2024-05-01', 'decade')).to(
-                raise_error(ValueError, 'Unsupported timerange: decade')
+                raise_error(ValueError, 'Unsupported timerange: decades')
             )
 
 
@@ -246,6 +256,20 @@ with description('Testing get_missing_consecutive_dates') as self:
             result = get_missing_consecutive_dates(dates_data, 'week')
             expect(result).to(equal(['2024-02', '2024-04']))
 
+    with context('when checking for missing minutes'):
+        with it('should return a list of missing minutes'):
+            dates_data = ['2024-05-01 12:00', '2024-05-01 12:02', '2024-05-01 12:04']
+            result = get_missing_consecutive_dates(dates_data, 'minute')
+            expect(result).to(equal(['2024-05-01 12:01', '2024-05-01 12:03']))
+        with context('when interval is 15'):
+            with it('should return a list of missing minutes with 15-minute intervals'):
+                dates_data = ['2024-05-01 12:00', '2024-05-01 13:00']
+                result = get_missing_consecutive_dates(dates_data, 'minute', 15)
+                expect(result).to(equal([
+                    '2024-05-01 12:15', '2024-05-01 12:30',
+                    '2024-05-01 12:45',
+                ]))
+
 
 with description('Testing fill_gaps_in_timerange_data') as self:
 
@@ -282,6 +306,23 @@ with description('Testing fill_gaps_in_timerange_data') as self:
                 {'x': '2024-02', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
                 {'x': '2024-03', 'type': 'Revenue', 'stacked': 'A', 'value': 0},
                 {'x': '2024-04', 'type': 'Revenue', 'stacked': 'A', 'value': 300},
+            ))
+
+        with it('should return the final values with gaps filled by minute'):
+            values_data = [
+                {'x': '2024-05-01 12:00', 'type': 'Revenue', 'stacked': 'A', 'value': 100},
+                {'x': '2024-05-01 12:02', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
+                {'x': '2024-05-01 12:04', 'type': 'Revenue', 'stacked': 'A', 'value': 300}
+            ]
+
+            result = fill_gaps_in_timerange_data(values_data, 'minute', 1)
+
+            expect(result).to(contain_only(
+                {'x': '2024-05-01 12:00', 'type': 'Revenue', 'stacked': 'A', 'value': 100},
+                {'x': '2024-05-01 12:01', 'type': 'Revenue', 'stacked': 'A', 'value': 0},
+                {'x': '2024-05-01 12:02', 'type': 'Revenue', 'stacked': 'A', 'value': 200},
+                {'x': '2024-05-01 12:03', 'type': 'Revenue', 'stacked': 'A', 'value': 0},
+                {'x': '2024-05-01 12:04', 'type': 'Revenue', 'stacked': 'A', 'value': 300}
             ))
 
 
@@ -423,5 +464,5 @@ with description('Testing process_timerange_data') as self:
 
             with it('raises an error for unsupported units'):
                 start_date = datetime(2021, 1, 1)
-                expect(lambda: add_time_unit(start_date, 10, 'minutes')).to(
+                expect(lambda: add_time_unit(start_date, 10, 'kg')).to(
                     raise_error(ValueError))
