@@ -69,6 +69,8 @@ class GraphIndicator(Graph):
             res['icon'] = self.icon.eval(res)
         if self.progressbar:
             res['progressbar'] = self.progressbar
+        if self.show_percent:
+            res['showPercent'] = self.show_percent
         if not self.show_percent and not self.progressbar:
             res.pop('percent', None)
         return res

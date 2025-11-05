@@ -52,6 +52,7 @@ with description('A Graph'):
         result = graph.process(50, 100)
         expect(result).to(have_key('percent', 50.0))
         expect(result).to(have_key('progressbar', True))
+        expect(result).not_to(have_key('showPercent'))
 
     with it('should calculate percent when showPercent is true'):
         xml = """<?xml version="1.0"?>
@@ -60,6 +61,7 @@ with description('A Graph'):
         graph = parse_graph(xml)
         result = graph.process(50, 100)
         expect(result).to(have_key('percent', 50.0))
+        expect(result).to(have_key('showPercent', True))
 
     with it('should not include percent when both progressbar and showPercent are false'):
         xml = """<?xml version="1.0"?>
@@ -69,6 +71,7 @@ with description('A Graph'):
         result = graph.process(50, 100)
         expect(result).not_to(have_key('percent'))
         expect(result).not_to(have_key('progressbar'))
+        expect(result).not_to(have_key('showPercent'))
 
     with it("should parse a chart graph XML with type line"):
         xml = """<?xml version="1.0"?>
