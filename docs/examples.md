@@ -122,6 +122,41 @@ kpi_result = kpi_graph.process(revenue_data, {'revenue': {'type': 'float'}})
 print(f"Total Revenue: {kpi_result}")
 ```
 
+### Indicator with Progress Bar
+
+```python
+# Indicator with progress bar showing completion percentage
+progress_xml = '''
+<graph type="indicator" string="Project Completion" progressbar="1">
+    <field name="completed_tasks" type="integer" operator="sum"/>
+</graph>
+'''
+
+progress_graph = parse_graph(progress_xml)
+
+# Process with value and total
+result = progress_graph.process(75, 100)
+print(f"Progress: {result}")
+# Output: {'value': 75, 'total': 100, 'type': 'indicator', 'percent': 75.0, 'progressbar': True}
+```
+
+### Indicator with Percentage Display
+
+```python
+# Indicator showing percentage without progress bar
+percent_xml = '''
+<graph type="indicator" string="Success Rate" showPercent="1" suffix="%">
+    <field name="successful" type="integer" operator="sum"/>
+</graph>
+'''
+
+percent_graph = parse_graph(percent_xml)
+
+result = percent_graph.process(85, 100)
+print(f"Success Rate: {result}")
+# Output: {'value': 85, 'total': 100, 'type': 'indicator', 'percent': 85.0, 'suffix': '%', 'showPercent': True}
+```
+
 ## Tree View Examples
 
 ### Basic Employee List

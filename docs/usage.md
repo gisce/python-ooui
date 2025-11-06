@@ -67,6 +67,8 @@ print(result)  # Processed graph data ready for visualization
 
 ### Indicator Graphs
 
+Indicators display single KPI values and support several display modes:
+
 ```python
 # Simple indicator
 indicator_xml = '''
@@ -74,9 +76,35 @@ indicator_xml = '''
     <field name="total_sales" type="float" operator="sum"/>
 </graph>
 '''
-
 indicator = parse_graph(indicator_xml)
+
+# Indicator with progress bar
+progress_xml = '''
+<graph type="indicator" string="Task Completion" progressbar="1">
+    <field name="completed" type="integer" operator="sum"/>
+</graph>
+'''
+progress_indicator = parse_graph(progress_xml)
+result = progress_indicator.process(75, 100)
+# result: {'value': 75, 'total': 100, 'percent': 75.0, 'progressbar': True}
+
+# Indicator with percentage display
+percent_xml = '''
+<graph type="indicator" string="Success Rate" showPercent="1" suffix="%">
+    <field name="success" type="integer" operator="sum"/>
+</graph>
+'''
+percent_indicator = parse_graph(percent_xml)
+result = percent_indicator.process(85, 100)
+# result: {'value': 85, 'total': 100, 'percent': 85.0, 'showPercent': True, 'suffix': '%'}
 ```
+
+**Indicator Attributes:**
+- `progressbar`: Display as a progress bar with percentage (set to "1" or "true")
+- `showPercent`: Display the percentage value as text (set to "1" or "true")
+- `suffix`: Add a suffix to the value (e.g., "%", "kW", "users")
+- `color`: Conditional color expression (e.g., "red:value<50;green:value>=50")
+- `icon`: Conditional icon expression
 
 ## Tree Views
 

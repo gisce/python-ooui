@@ -114,21 +114,64 @@ Single-value indicator graphs.
 
 - `field`: Main field configuration
 - `compare_field`: Optional comparison field
+- `progressbar`: Whether to display as a progress bar (boolean)
+- `show_percent`: Whether to display the percentage value (boolean)
+- `suffix`: Optional suffix to append to the value (e.g., '%', 'kW')
+- `color`: Conditional color expression
+- `icon`: Conditional icon expression
+- `total_domain`: Domain for calculating the total value
 
 #### Methods
 
-##### get_indicator_value(values, fields)
+##### process(value, total=0)
 
-Calculate the indicator value.
+Process indicator data and return formatted result.
+
+**Parameters:**
+- `value`: The indicator value
+- `total` (optional): The total value for percentage calculation
+
+**Returns:**
+- Dictionary containing:
+  - `value`: The indicator value
+  - `total`: The total value (if provided)
+  - `type`: Graph type ('indicator')
+  - `percent`: Calculated percentage (if progressbar or show_percent is True)
+  - `progressbar`: True if progressbar attribute is set
+  - `showPercent`: True if showPercent attribute is set
+  - `suffix`: Value suffix (if set)
+  - `color`: Evaluated color (if color condition is set)
+  - `icon`: Evaluated icon (if icon condition is set)
 
 **Example:**
 ```python
+# Basic indicator
 xml = '''
 <graph type="indicator" string="Total Sales">
     <field name="total" type="float" operator="sum"/>
 </graph>
 '''
 indicator = parse_graph(xml)
+
+# Indicator with progress bar
+xml = '''
+<graph type="indicator" string="Completion" progressbar="1">
+    <field name="completed" type="integer" operator="sum"/>
+</graph>
+'''
+indicator = parse_graph(xml)
+result = indicator.process(75, 100)
+# result: {'value': 75, 'total': 100, 'type': 'indicator', 'percent': 75.0, 'progressbar': True}
+
+# Indicator with percentage display
+xml = '''
+<graph type="indicator" string="Success Rate" showPercent="1" suffix="%">
+    <field name="success" type="integer" operator="sum"/>
+</graph>
+'''
+indicator = parse_graph(xml)
+result = indicator.process(85, 100)
+# result: {'value': 85, 'total': 100, 'type': 'indicator', 'percent': 85.0, 'suffix': '%', 'showPercent': True}
 ```
 
 ### GraphIndicatorField Class
