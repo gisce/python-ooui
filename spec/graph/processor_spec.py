@@ -68,6 +68,7 @@ with description('When process a graph'):
             icon='slack',
             suffix='kW',
             type='indicatorField',
+            showTotal=True,
         ))
 
     with it('should process indicator graph'):
@@ -89,6 +90,31 @@ with description('When process a graph'):
             color='green',
             icon='slack',
             type='indicator',
+        ))
+
+    with it('should process indicatorField graph with showTotal="0"'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" showPercent="1" showTotal="0" type="indicatorField" color="red:value>0;green:value==0" totalDomain="[]" icon="slack" suffix="kW">
+            <field name="potencia" operator="+" />
+        </graph>
+        """
+        total_values = models['polissa'].data
+        t20A_values = [v for v in total_values if v['tarifa'][1] == "2.0A"]
+        g = parse_graph(xml)
+        result = g.process(
+            t20A_values,
+            fields=models['polissa'].fields,
+            total_values=total_values
+        )
+        expect(result).to(have_keys(
+            value=77.72,
+            percent=28.19,
+            total=275.72,
+            color='red',
+            icon='slack',
+            suffix='kW',
+            type='indicatorField',
+            showTotal=False,
         ))
 
     # Un test per quan el total sigui 0 no falli al calcular el percentatge
