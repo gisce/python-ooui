@@ -24,6 +24,8 @@ class GraphIndicator(Graph):
         ) or None
         self._show_percent = parse_bool_attribute(
             element.get('showPercent')) if element.get('showPercent') else False
+        self._show_total = parse_bool_attribute(
+            element.get('showTotal')) if element.get('showTotal') else True
         self._progressbar = parse_bool_attribute(
             element.get('progressbar')) if element.get('progressbar') else False
         self.domain_parse_values = {}
@@ -43,6 +45,10 @@ class GraphIndicator(Graph):
     @property
     def show_percent(self):
         return self._show_percent
+
+    @property
+    def show_total(self):
+        return self._show_total
 
     @property
     def progressbar(self):
@@ -71,6 +77,7 @@ class GraphIndicator(Graph):
             res['progressbar'] = self.progressbar
         if self.show_percent:
             res['showPercent'] = self.show_percent
+        res['showTotal'] = self.show_total
         if not self.show_percent and not self.progressbar:
             res.pop('percent', None)
         return res

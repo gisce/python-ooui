@@ -33,6 +33,7 @@ with description('A Graph'):
         expect(graph.fields).to(contain_only('potencia'))
         expect(graph.total_domain).to(be_none)
         expect(graph.show_percent).to(be_true)
+        expect(graph.show_total).to(be_true)
         expect(graph.progressbar).to(be_false)
         expect(graph.suffix).to(equal('kW'))
 
@@ -72,6 +73,50 @@ with description('A Graph'):
         expect(result).not_to(have_key('percent'))
         expect(result).not_to(have_key('progressbar'))
         expect(result).not_to(have_key('showPercent'))
+
+    with it('should include showTotal by default'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" type="indicator" />
+        """
+        graph = parse_graph(xml)
+        expect(graph.show_total).to(be_true)
+        result = graph.process(50, 100)
+        expect(result).to(have_key('showTotal', True))
+
+    with it('should support showTotal="0" to disable'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" showTotal="0" type="indicator" />
+        """
+        graph = parse_graph(xml)
+        expect(graph.show_total).to(be_false)
+        result = graph.process(50, 100)
+        expect(result).to(have_key('showTotal', False))
+
+    with it('should support showTotal="1" explicitly'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" showTotal="1" type="indicator" />
+        """
+        graph = parse_graph(xml)
+        expect(graph.show_total).to(be_true)
+        result = graph.process(50, 100)
+        expect(result).to(have_key('showTotal', True))
+
+    with it('should always include showTotal in response'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" type="indicator" />
+        """
+        graph = parse_graph(xml)
+        result = graph.process(50, 100)
+        expect(result).to(have_key('showTotal'))
+        expect(result['showTotal']).to(be_true)
+        
+        xml_false = """<?xml version="1.0"?>
+        <graph string="My indicator" showTotal="0" type="indicator" />
+        """
+        graph_false = parse_graph(xml_false)
+        result_false = graph_false.process(50, 100)
+        expect(result_false).to(have_key('showTotal'))
+        expect(result_false['showTotal']).to(be_false)
 
     with it("should parse a chart graph XML with type line"):
         xml = """<?xml version="1.0"?>
