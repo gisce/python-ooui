@@ -24,8 +24,10 @@ class GraphIndicator(Graph):
         ) or None
         self._show_percent = parse_bool_attribute(
             element.get('showPercent')) if element.get('showPercent') else False
+        # showTotal is True by default only if totalDomain is defined, otherwise False
+        default_show_total = bool(self._total_domain)
         self._show_total = parse_bool_attribute(
-            element.get('showTotal')) if element.get('showTotal') else True
+            element.get('showTotal')) if element.get('showTotal') else default_show_total
         self._progressbar = parse_bool_attribute(
             element.get('progressbar')) if element.get('progressbar') else False
         self.domain_parse_values = {}
