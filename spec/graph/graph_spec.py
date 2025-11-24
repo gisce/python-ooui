@@ -33,7 +33,7 @@ with description('A Graph'):
         expect(graph.fields).to(contain_only('potencia'))
         expect(graph.total_domain).to(be_none)
         expect(graph.show_percent).to(be_true)
-        expect(graph.show_total).to(be_true)
+        expect(graph.show_total).to(be_false)  # False because no totalDomain
         expect(graph.progressbar).to(be_false)
         expect(graph.suffix).to(equal('kW'))
 
@@ -74,9 +74,18 @@ with description('A Graph'):
         expect(result).not_to(have_key('progressbar'))
         expect(result).not_to(have_key('showPercent'))
 
-    with it('should include showTotal by default'):
+    with it('should not include showTotal by default when no totalDomain'):
         xml = """<?xml version="1.0"?>
         <graph string="My indicator" type="indicator" />
+        """
+        graph = parse_graph(xml)
+        expect(graph.show_total).to(be_false)
+        result = graph.process(50, 100)
+        expect(result).to(have_key('showTotal', False))
+
+    with it('should include showTotal=True by default when totalDomain is defined'):
+        xml = """<?xml version="1.0"?>
+        <graph string="My indicator" type="indicator" totalDomain="[('user', '=', uid)]" />
         """
         graph = parse_graph(xml)
         expect(graph.show_total).to(be_true)
@@ -101,14 +110,22 @@ with description('A Graph'):
         result = graph.process(50, 100)
         expect(result).to(have_key('showTotal', True))
 
-    with it('should always include showTotal in response'):
-        xml = """<?xml version="1.0"?>
+    with it('should always include showTotal in response with correct value'):
+        xml_no_domain = """<?xml version="1.0"?>
         <graph string="My indicator" type="indicator" />
         """
-        graph = parse_graph(xml)
-        result = graph.process(50, 100)
-        expect(result).to(have_key('showTotal'))
-        expect(result['showTotal']).to(be_true)
+        graph_no_domain = parse_graph(xml_no_domain)
+        result_no_domain = graph_no_domain.process(50, 100)
+        expect(result_no_domain).to(have_key('showTotal'))
+        expect(result_no_domain['showTotal']).to(be_false)
+        
+        xml_with_domain = """<?xml version="1.0"?>
+        <graph string="My indicator" type="indicator" totalDomain="[]" />
+        """
+        graph_with_domain = parse_graph(xml_with_domain)
+        result_with_domain = graph_with_domain.process(50, 100)
+        expect(result_with_domain).to(have_key('showTotal'))
+        expect(result_with_domain['showTotal']).to(be_true)
         
         xml_false = """<?xml version="1.0"?>
         <graph string="My indicator" showTotal="0" type="indicator" />

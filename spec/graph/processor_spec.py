@@ -43,7 +43,7 @@ with description('When process a graph'):
         """
         result = get_graph_data(xml, 'polissa')
         expect(result).to(have_keys(
-            value=275.72, color='red'
+            value=275.72, color='red', showTotal=False  # False because no totalDomain
         ))
 
     with it('should process indicatorField graph'):
@@ -68,7 +68,7 @@ with description('When process a graph'):
             icon='slack',
             suffix='kW',
             type='indicatorField',
-            showTotal=True,
+            showTotal=True,  # True because totalDomain="[]" is defined
         ))
 
     with it('should process indicator graph'):
