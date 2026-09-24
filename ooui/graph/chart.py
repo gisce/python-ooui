@@ -188,4 +188,7 @@ class GraphChart(Graph):
                 y_axis_props['valueOpts'] = get_min_max(final_data)
             result['yAxisProps'] = y_axis_props
 
+        if self.type in ('line', 'bar') and self.y_range == 'slider':
+            result['yAxisOpts'] = {'mode': 'slider'}
+
         return result
