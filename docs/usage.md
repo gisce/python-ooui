@@ -19,6 +19,7 @@ Python OOUI supports several graph types:
 - **line**: Line charts for trend visualization
 - **bar**: Bar charts for comparative data
 - **pie**: Pie charts for proportional data
+- **gantt**: One interval per record, with start and end fields
 - **indicator**: Single-value indicators
 - **indicatorField**: Field-based indicators
 
@@ -64,6 +65,25 @@ fields = {
 result = graph.process(data, fields)
 print(result)  # Processed graph data ready for visualization
 ```
+
+For a Y-axis range slider, set `y_range="slider"` on a line or bar graph.
+The processed result includes `yAxisOpts: {'mode': 'slider'}`; line graphs also
+retain their existing `yAxisProps` response.
+
+Gantt graphs use one X field for the task name and two Y fields with `start`
+and `end` roles. An optional `label` on either Y field groups intervals:
+
+```xml
+<graph type="gantt">
+    <field name="name" axis="x"/>
+    <field name="date_start" axis="y" role="start" label="project_id"/>
+    <field name="date_end" axis="y" role="end"/>
+</graph>
+```
+
+`process(records, fields)` keeps each record as a separate interval, even when
+task names repeat. The result contains `id`, `x`, `start`, `end`, `type`, and
+`record` for each interval, plus `num_items`, `isGroup`, and `isStack`.
 
 ### Indicator Graphs
 
