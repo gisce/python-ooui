@@ -166,13 +166,14 @@ class GraphChart(Graph):
             'num_items': len(values),
         }
 
-        if self.type == "line" and self.y_range:
-            y_axis_props = {'mode': self.y_range}
-            if self.y_range == "auto":
-                y_axis_props['valueOpts'] = get_min_max(final_data)
-            result['yAxisProps'] = y_axis_props
+        if ((self.type == 'line' and self.y_range)
+                or (self.type == 'bar' and self.y_range == 'slider')):
+            y_axis_opts = {'mode': self.y_range}
+            if self.y_range == 'auto':
+                y_axis_opts['valueOpts'] = get_min_max(final_data)
+            result['yAxisOpts'] = y_axis_opts
 
-        if self.type in ('line', 'bar') and self.y_range == 'slider':
-            result['yAxisOpts'] = {'mode': 'slider'}
+        if self.type in ('line', 'bar') and self.x_range == 'slider':
+            result['xAxisOpts'] = {'mode': 'slider'}
 
         return result
