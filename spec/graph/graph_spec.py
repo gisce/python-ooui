@@ -155,7 +155,7 @@ with description('A Graph'):
 
     with description("Processing a Graph"):
         with description("A line graph with y_range auto"):
-            with it("should return yAxisProps to the result with min and max values"):
+            with it("should return yAxisOpts to the result with min and max values"):
                 xml = """<?xml version="1.0"?>
                 <graph type="line" y_range="auto" timerange="day">
                   <field name="date" axis="x"/>
@@ -170,7 +170,7 @@ with description('A Graph'):
                 ]
                 fields = {'date': {'type': 'date'}, 'v': {'type': 'integer'}}
                 result = graph.process(values, fields)
-                expect(result['yAxisProps']).to(equal({
+                expect(result['yAxisOpts']).to(equal({
                     'mode': 'auto',
                     'valueOpts': {
                         'min': 8,
@@ -178,7 +178,7 @@ with description('A Graph'):
                     }
                 }))
         with description("A line graph with y_range to full"):
-            with it("should return yAxisProps to the result with mode full"):
+            with it("should return yAxisOpts to the result with mode full"):
                 xml = """<?xml version="1.0"?>
                 <graph type="line" y_range="full" timerange="day">
                   <field name="date" axis="x"/>
@@ -193,6 +193,6 @@ with description('A Graph'):
                 ]
                 fields = {'date': {'type': 'date'}, 'v': {'type': 'integer'}}
                 result = graph.process(values, fields)
-                expect(result['yAxisProps']).to(equal({
+                expect(result['yAxisOpts']).to(equal({
                     'mode': 'full',
                 }))

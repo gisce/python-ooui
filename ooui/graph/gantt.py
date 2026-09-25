@@ -47,6 +47,8 @@ class GraphGantt(Graph):
                 label for key, label in field.get('selection', [])
                 if key == value and isinstance(key, bool) == isinstance(value, bool)
             ), None)
+        if value == 0 and not isinstance(value, bool):
+            return value
         return value or uninformed_string
 
     def process(self, values, fields, options=None):

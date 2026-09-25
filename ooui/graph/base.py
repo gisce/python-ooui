@@ -8,6 +8,7 @@ class Graph(object):
         """
         self._string = element.get('string')
         self._timerange = element.get('timerange', None)
+        self._x_range = element.get('x_range', 'default')
         self._y_range = element.get('y_range', "default")
 
         interval = element.get('interval', None)
@@ -30,6 +31,10 @@ class Graph(object):
     @property
     def y_range(self):
         return self._y_range
+
+    @property
+    def x_range(self):
+        return self._x_range
 
     @property
     def type(self):

@@ -57,6 +57,29 @@ with description('Gantt graph'):
         expect([item['type'] for item in result['data']]).to(equal(['North', 'South']))
         expect([item['id'] for item in result['data']]).to(equal([1, 2]))
 
+    with it('keeps numeric zero as a task and group label but not boolean false'):
+        xml = ('<graph type="gantt">'
+               '<field name="task" axis="x"/>'
+               '<field name="start" axis="y" role="start" label="group"/>'
+               '<field name="end" axis="y" role="end"/>'
+               '</graph>')
+        graph = parse_graph(xml)
+        fields = {
+            'task': {'type': 'integer'},
+            'start': {'type': 'date'},
+            'end': {'type': 'date'},
+            'group': {'type': 'integer'},
+        }
+        values = [
+            {'id': 1, 'task': 0, 'group': 0,
+             'start': '2026-09-22', 'end': '2026-09-23'},
+            {'id': 2, 'task': False, 'group': False,
+             'start': '2026-09-24', 'end': '2026-09-25'},
+        ]
+        result = graph.process(values, fields, {'uninformedString': 'Sense informar'})
+        expect([item['x'] for item in result['data']]).to(equal([0, 'Sense informar']))
+        expect([item['type'] for item in result['data']]).to(equal([0, 'Sense informar']))
+
     with it('keeps ungrouped and empty Gantt results valid'):
         xml = ('<graph type="gantt">'
                '<field name="name" axis="x"/>'

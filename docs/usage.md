@@ -66,9 +66,12 @@ result = graph.process(data, fields)
 print(result)  # Processed graph data ready for visualization
 ```
 
-For a Y-axis range slider, set `y_range="slider"` on a line or bar graph.
-The processed result includes `yAxisOpts: {'mode': 'slider'}`; line graphs also
-retain their existing `yAxisProps` response.
+For an X-axis or Y-axis range slider on a line or bar graph, set
+`x_range="slider"` or `y_range="slider"`. Both may be used together. The
+processed result includes `xAxisOpts` and/or `yAxisOpts` with `mode: 'slider'`.
+Line graphs also use `yAxisOpts` for the default, `auto`, and `full` Y-axis
+modes. For `auto`, `valueOpts` contains the calculated minimum and maximum
+values.
 
 Gantt graphs use one X field for the task name and two Y fields with `start`
 and `end` roles. An optional `label` on either Y field groups intervals:
