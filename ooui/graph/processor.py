@@ -58,10 +58,14 @@ def get_values_grouped_by_fields(fields_names, fields, values):
     grouped_values = {}
 
     for entry in values:
-        key = tuple(get_value_and_label_for_field(fields, entry, field_name)['value']
-                    for field_name in fields_names)
-        label = ' - '.join(get_value_and_label_for_field(fields, entry, field_name)['label']
-                          for field_name in fields_names)
+        field_values = [
+            get_value_and_label_for_field(fields, entry, field_name)
+            for field_name in fields_names
+        ]
+        key = tuple(field_value['value'] for field_value in field_values)
+        label = ' - '.join(
+            field_value['label'] or '' for field_value in field_values
+        )
 
         if key not in grouped_values:
             grouped_values[key] = {'label': label, 'entries': []}
