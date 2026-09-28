@@ -7,7 +7,8 @@ import sys
 from ooui.graph import parse_graph
 from ooui.graph.processor import (
     get_values_grouped_by_field, get_all_objects_in_grouped_values,
-    get_values_for_y_field, process_graph_data, get_min_max
+    get_values_for_y_field, process_graph_data, get_min_max,
+    get_values_grouped_by_fields
 )
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -468,6 +469,31 @@ with description('Testing get_values_grouped_by_field') as self:
                     {'category': 2, 'name': 'Carrot'},
                     {'category': 2, 'name': 'Lettuce'}
                 ]}
+            }))
+
+
+with description('Testing get_values_grouped_by_fields') as self:
+    with context('when a selection field has no value'):
+        with it('should preserve the group key and use an empty label'):
+            fields_data = {
+                'category': {'type': 'string'},
+                'phase': {'type': 'selection', 'selection': [
+                    ('10', 'Phase 1')
+                ]}
+            }
+            values_data = [
+                {'category': 'Fruit', 'phase': False}
+            ]
+
+            grouped_values = get_values_grouped_by_fields(
+                ['category', 'phase'], fields_data, values_data
+            )
+
+            expect(grouped_values).to(equal({
+                ('Fruit', False): {
+                    'label': 'Fruit - ',
+                    'entries': values_data
+                }
             }))
 
 
