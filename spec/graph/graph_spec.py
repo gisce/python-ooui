@@ -186,6 +186,20 @@ with description('A Graph'):
                         'max': 32
                     }
                 }))
+
+            with it("should return empty data without value limits when there are no values"):
+                xml = """<?xml version="1.0"?>
+                <graph type="line" y_range="auto" timerange="day">
+                  <field name="date" axis="x"/>
+                  <field name="v" operator="+" axis="y"/>
+                </graph>
+                """
+                graph = parse_graph(xml)
+                fields = {'date': {'type': 'date'}, 'v': {'type': 'integer'}}
+                result = graph.process([], fields)
+                expect(result['data']).to(equal([]))
+                expect(result['yAxisOpts']).to(equal({'mode': 'auto'}))
+
         with description("A line graph with y_range to full"):
             with it("should return yAxisOpts to the result with mode full"):
                 xml = """<?xml version="1.0"?>

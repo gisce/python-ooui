@@ -185,7 +185,7 @@ class GraphChart(Graph):
         if ((self.type == 'line' and self.y_range)
                 or (self.type == 'bar' and self.y_range == 'slider')):
             y_axis_opts = {'mode': self.y_range}
-            if self.y_range == 'auto':
+            if self.y_range == 'auto' and final_data:
                 y_axis_opts['valueOpts'] = get_min_max(final_data)
             result['yAxisOpts'] = y_axis_opts
 
