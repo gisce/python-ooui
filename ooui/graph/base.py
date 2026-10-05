@@ -10,6 +10,7 @@ class Graph(object):
         self._timerange = element.get('timerange', None)
         self._x_range = element.get('x_range', 'default')
         self._y_range = element.get('y_range', "default")
+        self._y_zoom = element.get('y_zoom', 'none')
 
         interval = element.get('interval', None)
         self._interval = int(interval) if interval is not None else 1
@@ -31,6 +32,10 @@ class Graph(object):
     @property
     def y_range(self):
         return self._y_range
+
+    @property
+    def y_zoom(self):
+        return self._y_zoom
 
     @property
     def x_range(self):

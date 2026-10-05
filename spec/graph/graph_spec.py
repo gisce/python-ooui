@@ -162,6 +162,17 @@ with description('A Graph'):
         expect(graph.y[0].operator).to(equal('+'))
         expect(graph.y_range).to(equal('auto'))
 
+    with it("should parse an independent y-axis zoom mode"):
+        xml = """<?xml version="1.0"?>
+    <graph type="line" y_range="full" y_zoom="slider">
+      <field name="data_alta" axis="x"/>
+      <field name="data_alta" operator="+" axis="y"/>
+    </graph>
+    """
+        graph = parse_graph(xml)
+        expect(graph.y_range).to(equal('full'))
+        expect(graph.y_zoom).to(equal('slider'))
+
     with description("Processing a Graph"):
         with description("A line graph with y_range auto"):
             with it("should return yAxisOpts to the result with min and max values"):

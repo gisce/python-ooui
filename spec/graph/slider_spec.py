@@ -22,6 +22,21 @@ with description('Graph axis sliders'):
             expect(result).not_to(have_key('xAxisOpts'))
             expect(result).not_to(have_key('yAxisProps'))
 
+    with it('returns independent Y range and zoom metadata'):
+        fields = {'name': {'type': 'char'}, 'amount': {'type': 'integer'}}
+        values = [{'name': 'January', 'amount': 10}]
+        for graph_type in ('line', 'bar'):
+            xml = ('<graph type="{}" y_range="auto" y_zoom="slider">'
+                   '<field name="name" axis="x"/>'
+                   '<field name="amount" axis="y" operator="+"/>'
+                   '</graph>').format(graph_type)
+            result = parse_graph(xml).process(values, fields)
+            expect(result['yAxisOpts']).to(equal({
+                'mode': 'auto',
+                'zoom': 'slider',
+                'valueOpts': {'min': 10, 'max': 10},
+            }))
+
     with it('returns slider metadata for line and bar under one key'):
         fields = {'name': {'type': 'char'}, 'amount': {'type': 'integer', 'string': 'Amount'}}
         values = [{'name': 'January', 'amount': 10}]
