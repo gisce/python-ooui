@@ -49,7 +49,7 @@ with description('Graph axis sliders'):
                    '<field name="amount" axis="y" operator="+"/>'
                    '</graph>').format(y_range)
             result = parse_graph(xml).process(values, fields)
-            expected = {'mode': y_range}
+            expected = {'mode': y_range, 'zoom': 'none'}
             if y_range == 'auto':
                 expected['valueOpts'] = {'min': 9, 'max': 21}
             expect(result['yAxisOpts']).to(equal(expected))
@@ -66,6 +66,20 @@ with description('Graph axis sliders'):
             expect(result['yAxisOpts']).to(equal({'mode': 'slider'}))
             expect(result).not_to(have_key('xAxisOpts'))
             expect(result).not_to(have_key('yAxisProps'))
+
+    with it('preserves an explicitly disabled Y zoom with a legacy range'):
+        fields = {'name': {'type': 'char'}, 'amount': {'type': 'integer'}}
+        values = [{'name': 'January', 'amount': 10}]
+        for graph_type in ('line', 'bar'):
+            xml = ('<graph type="{}" y_range="slider" y_zoom="none">'
+                   '<field name="name" axis="x"/>'
+                   '<field name="amount" axis="y" operator="+"/>'
+                   '</graph>').format(graph_type)
+            result = parse_graph(xml).process(values, fields)
+            expect(result['yAxisOpts']).to(equal({
+                'mode': 'slider',
+                'zoom': 'none',
+            }))
 
     with it('returns an X-axis slider for line and bar independently of Y'):
         fields = {'name': {'type': 'char'}, 'amount': {'type': 'integer'}}

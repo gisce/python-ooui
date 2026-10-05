@@ -73,7 +73,9 @@ The Y-axis initial range and zoom control can be configured independently with
 adjust it. The processed `yAxisOpts` keeps the range in `mode` and exposes the
 control as `zoom: 'slider'`. For `auto`, `valueOpts` contains the calculated
 minimum and maximum values. The legacy `y_range="slider"` syntax remains
-supported and returns `mode: 'slider'`.
+supported and returns `mode: 'slider'`. An explicit `y_zoom="none"` is returned
+as `zoom: 'none'`; when `y_zoom` is omitted, `zoom` is omitted too for backward
+compatibility.
 
 Gantt graphs use one X field for the task name and two Y fields with `start`
 and `end` roles. An optional `label` on either Y field groups intervals:

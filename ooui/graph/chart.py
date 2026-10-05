@@ -190,8 +190,8 @@ class GraphChart(Graph):
             y_axis_opts = {'mode': self.y_range}
             if self.y_range == 'auto' and final_data:
                 y_axis_opts['valueOpts'] = get_min_max(final_data)
-            if self.y_zoom == 'slider':
-                y_axis_opts['zoom'] = 'slider'
+            if self.y_zoom_explicit:
+                y_axis_opts['zoom'] = self.y_zoom
             result['yAxisOpts'] = y_axis_opts
 
         if self.type in ('line', 'bar') and self.x_range == 'slider':
