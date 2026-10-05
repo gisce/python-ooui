@@ -37,6 +37,23 @@ with description('Graph axis sliders'):
                 'valueOpts': {'min': 10, 'max': 10},
             }))
 
+    with it('returns an explicit Y range for bars without enabling zoom'):
+        fields = {'name': {'type': 'char'}, 'amount': {'type': 'integer'}}
+        values = [
+            {'name': 'January', 'amount': 10},
+            {'name': 'February', 'amount': 20},
+        ]
+        for y_range in ('auto', 'full'):
+            xml = ('<graph type="bar" y_range="{}" y_zoom="none">'
+                   '<field name="name" axis="x"/>'
+                   '<field name="amount" axis="y" operator="+"/>'
+                   '</graph>').format(y_range)
+            result = parse_graph(xml).process(values, fields)
+            expected = {'mode': y_range}
+            if y_range == 'auto':
+                expected['valueOpts'] = {'min': 9, 'max': 21}
+            expect(result['yAxisOpts']).to(equal(expected))
+
     with it('returns slider metadata for line and bar under one key'):
         fields = {'name': {'type': 'char'}, 'amount': {'type': 'integer', 'string': 'Amount'}}
         values = [{'name': 'January', 'amount': 10}]

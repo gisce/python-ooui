@@ -184,7 +184,8 @@ class GraphChart(Graph):
 
         if ((self.type == 'line' and self.y_range)
                 or (self.type == 'bar' and (
-                    self.y_range == 'slider' or self.y_zoom == 'slider'
+                    self.y_range in ('auto', 'full', 'slider')
+                    or self.y_zoom == 'slider'
                 ))):
             y_axis_opts = {'mode': self.y_range}
             if self.y_range == 'auto' and final_data:
