@@ -92,7 +92,7 @@ class GraphChart(Graph):
                         'stacked': y_field.stacked
                     })
                 else:
-                    if y_field.stacked in fields:
+                    if y_field.stacked in fields and y_field.stacked != y_field.label:
                         values_grouped_by_y_label = get_values_grouped_by_fields(
                             [y_field.label, y_field.stacked],
                             fields,
