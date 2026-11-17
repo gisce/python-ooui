@@ -368,3 +368,30 @@ with description('A Graph'):
                         "value": 1.0
                     }]
                 }))
+        with description("A bar graph stacked by its own label field"):
+            with it("should stack every label in a single stack"):
+                xml = """<?xml version="1.0"?>
+                    <graph type="bar">
+                        <field name="time" axis="x"/>
+                        <field name="value" operator="+" axis="y" label="name" stacked="name"/>
+                    </graph>"""
+                graph = parse_graph(xml)
+                fields = {
+                    'time': {'type': 'char', 'string': 'Time'},
+                    'value': {'type': 'integer', 'string': 'Value'},
+                    'name': {'type': 'char', 'string': 'Name', 'size': 64},
+                }
+                values = [
+                    {'id': 1, 'time': '00:00', 'name': 'cnc_active', 'value': 30},
+                    {'id': 2, 'time': '00:00', 'name': 'cnc_other', 'value': 5},
+                    {'id': 3, 'time': '00:15', 'name': 'cnc_active', 'value': 32},
+                    {'id': 4, 'time': '00:15', 'name': 'cnc_other', 'value': 4},
+                ]
+                result = graph.process(values, fields)
+                expect(result['isStack']).to(be_true)
+                expect(result['data']).to(equal([
+                    {'x': '00:00', 'value': 30, 'type': 'cnc_active', 'operator': '+', 'stacked': 'name'},
+                    {'x': '00:00', 'value': 5, 'type': 'cnc_other', 'operator': '+', 'stacked': 'name'},
+                    {'x': '00:15', 'value': 32, 'type': 'cnc_active', 'operator': '+', 'stacked': 'name'},
+                    {'x': '00:15', 'value': 4, 'type': 'cnc_other', 'operator': '+', 'stacked': 'name'},
+                ]))
